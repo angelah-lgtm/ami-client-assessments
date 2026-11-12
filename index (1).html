@@ -1,0 +1,754 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Client Assessments: Weeks 3, 6 and 9</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --charcoal:#181818; --ink-900:#1f1f1f; --ink-700:#3a3a3a; --ink-500:#6b6b6b; --ink-300:#b9b9b9; --ink-100:#ececec; --ink-50:#f6f6f5;
+  --green:#80b122; --green-700:#5e8418; --green-50:#f2f8e6;
+  --blue:#2d9cdb; --blue-700:#1f76a8; --blue-50:#eaf5fc;
+  --amber:#d9930d; --amber-50:#fdf4e2; --red:#d64545; --red-50:#fbeaea;
+  --r-md:10px; --r-lg:16px; --r-xl:24px;
+  --shadow-sm:0 1px 2px rgba(24,24,24,.06),0 1px 3px rgba(24,24,24,.06);
+  --shadow-md:0 4px 14px rgba(24,24,24,.08);
+  --ease:cubic-bezier(.2,0,0,1);
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{font-family:Montserrat,system-ui,-apple-system,Segoe UI,Roboto,sans-serif;color:var(--charcoal);background:var(--ink-50);line-height:1.6;font-size:15px;-webkit-font-smoothing:antialiased}
+button,input,select,textarea{font-family:inherit}
+.app{display:grid;grid-template-columns:280px 1fr;min-height:100vh}
+/* Sidebar */
+.side{background:var(--charcoal);color:#fff;padding:28px 20px;position:sticky;top:0;height:100vh;overflow:auto;display:flex;flex-direction:column;gap:24px;
+  background-image:radial-gradient(120% 60% at 0% 0%,rgba(128,177,34,.22),transparent 60%),radial-gradient(100% 50% at 100% 100%,rgba(45,156,219,.18),transparent 60%)}
+.side .logo{height:22px;width:auto;display:block;opacity:.95}
+.side .kicker{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.6);margin:0}
+.side h2{font-size:17px;line-height:1.3;margin:6px 0 0;font-weight:700;letter-spacing:-.01em}
+.nav{display:flex;flex-direction:column;gap:4px;margin:0;padding:0;list-style:none}
+.nav a{cursor:pointer;display:flex;align-items:center;gap:12px;padding:10px 12px;border-radius:var(--r-md);color:rgba(255,255,255,.72);text-decoration:none;font-size:14px;font-weight:500;transition:background .2s var(--ease),color .2s var(--ease)}
+.nav a:hover{background:rgba(255,255,255,.07);color:#fff}
+.nav a.active{background:rgba(255,255,255,.12);color:#fff;box-shadow:inset 0 1px 0 rgba(255,255,255,.12)}
+.nav .num{flex:0 0 24px;height:24px;border-radius:50%;border:1px solid rgba(255,255,255,.25);display:grid;place-items:center;font-size:11px;font-weight:600}
+.nav a.done .num{background:var(--green);border-color:var(--green);color:var(--charcoal)}
+.progress{margin-top:auto;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);border-radius:var(--r-lg);padding:14px 16px}
+.progress .lbl{display:flex;justify-content:space-between;font-size:12px;color:rgba(255,255,255,.75);margin-bottom:8px}
+.bar{height:6px;border-radius:99px;background:rgba(255,255,255,.12);overflow:hidden}
+.bar span{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--green),var(--blue));transition:width .32s var(--ease)}
+/* Main */
+main{padding:48px clamp(20px,5vw,72px) 80px;max-width:1040px;width:100%}
+.view{display:none;animation:fade .32s var(--ease)}
+.view.on{display:block}
+@keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.overline{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-500);margin:0 0 10px;font-weight:500}
+h1{font-size:clamp(28px,4vw,40px);line-height:1.15;letter-spacing:-.02em;margin:0 0 16px;font-weight:800}
+h3{font-size:18px;margin:0 0 8px;font-weight:700;letter-spacing:-.01em}
+h4{font-size:15px;margin:0 0 6px;font-weight:700}
+p{margin:0 0 14px}
+.lead{font-size:18px;color:var(--ink-700);max-width:720px}
+.muted{color:var(--ink-500)}
+.hero{background:var(--charcoal);color:#fff;border-radius:var(--r-xl);padding:40px;margin-bottom:32px;position:relative;overflow:hidden;
+  background-image:radial-gradient(80% 120% at 100% 0%,rgba(45,156,219,.35),transparent 55%),radial-gradient(70% 100% at 0% 100%,rgba(128,177,34,.35),transparent 55%)}
+.hero .overline{color:rgba(255,255,255,.65)}
+.hero .lead{color:rgba(255,255,255,.85)}
+.hero .pillrow{display:flex;flex-wrap:wrap;gap:10px;margin-top:22px}
+.pill{display:inline-flex;align-items:center;gap:8px;padding:8px 14px;border-radius:99px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.16);font-size:13px;font-weight:500;backdrop-filter:blur(8px)}
+.grid{display:grid;gap:16px}
+.g2{grid-template-columns:repeat(2,minmax(0,1fr))}
+.g3{grid-template-columns:repeat(3,minmax(0,1fr))}
+.g4{grid-template-columns:repeat(4,minmax(0,1fr))}
+.card{background:#fff;border:1px solid var(--ink-100);border-radius:var(--r-lg);padding:22px;box-shadow:var(--shadow-sm)}
+.card p:last-child{margin-bottom:0}
+.icon{width:36px;height:36px;border-radius:10px;display:grid;place-items:center;margin-bottom:14px;background:var(--green-50);color:var(--green-700)}
+.icon.blue{background:var(--blue-50);color:var(--blue-700)}
+.icon.dark{background:var(--ink-100);color:var(--charcoal)}
+.icon svg{width:18px;height:18px}
+.section{margin-top:36px}
+.section > h3{margin-bottom:14px}
+.callout{border-radius:var(--r-lg);padding:18px 20px;background:var(--blue-50);border:1px solid rgba(45,156,219,.25);margin:20px 0}
+.callout.green{background:var(--green-50);border-color:rgba(128,177,34,.3)}
+.callout .tag{font-size:11px;letter-spacing:.14em;text-transform:uppercase;font-weight:700;margin-bottom:6px;color:var(--blue-700)}
+.callout.green .tag{color:var(--green-700)}
+.callout p:last-child{margin:0}
+table{width:100%;border-collapse:separate;border-spacing:0;background:#fff;border:1px solid var(--ink-100);border-radius:var(--r-lg);overflow:hidden;font-size:14px}
+th,td{text-align:left;padding:14px 16px;vertical-align:top;border-bottom:1px solid var(--ink-100)}
+th{background:var(--ink-50);font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-500);font-weight:600}
+tr:last-child td{border-bottom:0}
+td:first-child{font-weight:600;width:28%}
+.lane-head{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+.badge{display:inline-flex;align-items:center;gap:6px;padding:4px 10px;border-radius:99px;font-size:12px;font-weight:600}
+.badge.am{background:var(--green-50);color:var(--green-700)}
+.badge.cs{background:var(--blue-50);color:var(--blue-700)}
+.badge.g{background:var(--green-50);color:var(--green-700)}
+.badge.y{background:var(--amber-50);color:#9a6806}
+.badge.r{background:var(--red-50);color:#a12f2f}
+ul.clean{margin:0;padding-left:18px}
+ul.clean li{margin-bottom:6px}
+.steps{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:12px}
+.steps.s4{grid-template-columns:repeat(4,minmax(0,1fr))}
+.badge.dk{background:var(--ink-100);color:var(--charcoal)}
+.step{background:#fff;border:1px solid var(--ink-100);border-radius:var(--r-lg);padding:20px;position:relative}
+.step .n{font-size:12px;font-weight:700;letter-spacing:.12em;color:var(--ink-500);text-transform:uppercase;margin-bottom:8px}
+.step.cs{border-color:rgba(45,156,219,.35);background:linear-gradient(180deg,#fff,var(--blue-50))}
+.step .who{margin-top:10px}
+.timeline{background:#fff;border:1px solid var(--ink-100);border-radius:var(--r-lg);padding:20px 12px 8px;margin-top:16px}
+.timeline svg{width:100%;height:auto;display:block}
+.tabs{display:flex;gap:8px;margin:8px 0 20px;flex-wrap:wrap}
+.tab{border:1px solid var(--ink-100);background:#fff;padding:10px 18px;border-radius:99px;font-weight:600;font-size:14px;cursor:pointer;transition:all .2s var(--ease);color:var(--ink-700)}
+.tab:hover{border-color:var(--ink-300)}
+.tab.on{background:var(--charcoal);color:#fff;border-color:var(--charcoal)}
+.panel{display:none}.panel.on{display:block;animation:fade .32s var(--ease)}
+.qhead{display:flex;flex-wrap:wrap;gap:24px;align-items:flex-start;background:var(--charcoal);color:#fff;border-radius:var(--r-lg);padding:24px;margin-bottom:16px;
+  background-image:radial-gradient(80% 120% at 100% 0%,rgba(45,156,219,.28),transparent 60%)}
+.qhead .big{font-size:22px;font-weight:700;line-height:1.3;letter-spacing:-.01em;flex:1 1 360px}
+.qhead .meta{font-size:13px;color:rgba(255,255,255,.75);flex:0 0 auto}
+.qhead .meta b{color:#fff;display:block;font-size:15px}
+.esc{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+.esc .card{border-top-width:4px}
+.esc .g{border-top-color:var(--green)} .esc .y{border-top-color:var(--amber)} .esc .r{border-top-color:var(--red)}
+/* Builder */
+.builder{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:20px;align-items:start}
+.form{display:flex;flex-direction:column;gap:16px}
+fieldset{border:1px solid var(--ink-100);border-radius:var(--r-lg);padding:18px;margin:0;background:#fff}
+legend{font-size:12px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-500);padding:0 6px}
+label{display:block;font-size:13px;font-weight:600;margin:10px 0 6px;color:var(--ink-700)}
+label:first-of-type{margin-top:4px}
+input[type=text],input[type=date],input[type=number],select,textarea{width:100%;border:1px solid var(--ink-100);border-radius:var(--r-md);padding:10px 12px;font-size:14px;background:var(--ink-50);color:var(--charcoal);transition:border .2s,box-shadow .2s,background .2s}
+input:focus,select:focus,textarea:focus{outline:none;border-color:var(--blue);background:#fff;box-shadow:0 0 0 3px rgba(45,156,219,.25)}
+textarea{min-height:64px;resize:vertical}
+.row{display:grid;gap:10px}
+.r2{grid-template-columns:1fr 1fr}.r3{grid-template-columns:repeat(3,1fr)}
+.seg{display:flex;gap:8px;flex-wrap:wrap}
+.seg label{margin:0;display:inline-flex;align-items:center;gap:8px;padding:8px 14px;border:1px solid var(--ink-100);border-radius:99px;cursor:pointer;font-weight:600;background:var(--ink-50)}
+.seg input{accent-color:var(--charcoal)}
+.hint{font-size:12px;color:var(--ink-500);margin-top:4px}
+.prompt{background:var(--green-50);border:1px solid rgba(128,177,34,.3);border-radius:var(--r-md);padding:12px 14px;font-size:13px;color:var(--green-700);font-weight:500}
+.preview{position:sticky;top:24px;background:var(--charcoal);color:#e9e9e9;border-radius:var(--r-lg);padding:20px;box-shadow:var(--shadow-md)}
+.preview pre{white-space:pre-wrap;word-break:break-word;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:12.5px;line-height:1.6;margin:0 0 14px;max-height:62vh;overflow:auto}
+.preview .top{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+.preview .top span{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.6);font-weight:600}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:0;border-radius:99px;padding:11px 20px;font-weight:700;font-size:14px;cursor:pointer;transition:background .2s var(--ease),transform .12s}
+.btn:active{transform:translateY(1px)}
+.btn.primary{background:var(--green);color:var(--charcoal)}
+.btn.primary:hover{background:#73a01d}
+.btn.ghost{background:transparent;color:var(--ink-700);border:1px solid var(--ink-100)}
+.btn.ghost:hover{border-color:var(--ink-300)}
+.btn.light{background:rgba(255,255,255,.1);color:#fff;border:1px solid rgba(255,255,255,.18)}
+.btnrow{display:flex;gap:10px;flex-wrap:wrap}
+.footer-nav{display:flex;justify-content:space-between;align-items:center;margin-top:40px;padding-top:24px;border-top:1px solid var(--ink-100);gap:12px;flex-wrap:wrap}
+/* Quiz */
+.q{background:#fff;border:1px solid var(--ink-100);border-radius:var(--r-lg);padding:22px;margin-bottom:14px}
+.q .opts{display:flex;flex-direction:column;gap:8px;margin-top:12px}
+.opt{text-align:left;border:1px solid var(--ink-100);background:var(--ink-50);padding:12px 14px;border-radius:var(--r-md);cursor:pointer;font-size:14px;font-weight:500;transition:all .2s var(--ease);color:var(--charcoal)}
+.opt:hover{border-color:var(--ink-300)}
+.opt.right{background:var(--green-50);border-color:var(--green);color:var(--green-700)}
+.opt.wrong{background:var(--red-50);border-color:var(--red);color:#a12f2f}
+.fb{margin-top:10px;font-size:14px;display:none}
+.fb.on{display:block}
+.score{font-weight:700}
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--charcoal);color:#fff;padding:12px 20px;border-radius:99px;font-weight:600;font-size:14px;opacity:0;transition:all .2s var(--ease);pointer-events:none;box-shadow:var(--shadow-md)}
+.toast.on{opacity:1;transform:translateX(-50%)}
+.mtop{display:none}
+@media (max-width:960px){
+  .app{grid-template-columns:1fr}
+  .side{position:relative;height:auto;padding:18px 16px;gap:14px}
+  .side .progress{display:none}
+  .nav{flex-direction:row;overflow-x:auto;gap:6px;padding-bottom:4px}
+  .nav a{white-space:nowrap;padding:8px 10px}
+  .g3,.g4,.steps,.esc{grid-template-columns:1fr 1fr}
+  .builder{grid-template-columns:1fr}
+  .preview{position:relative;top:0}
+}
+@media (max-width:620px){
+  main{padding:28px 16px 64px}
+  .g2,.g3,.g4,.steps,.esc,.r2,.r3{grid-template-columns:1fr}
+  .hero{padding:28px 22px}
+  td:first-child{width:auto}
+}
+</style>
+</head>
+<body>
+<div class="app">
+  <aside class="side">
+    <div>
+      <img class="logo" alt="Martal" src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iODIxIiBoZWlnaHQ9IjE4NSIgdmlld0JveD0iMCAwIDgyMSAxODUiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxwYXRoIGQ9Ik0xMi40OTc2IDBDMTMuNDE4NSAwLjY1Nzc3MSAxNC42MDI1IDAuNTI2MjE2IDE1LjY1NDkgMC43ODkzMjVDMjIuMTAxMSAyLjM2Nzk3IDI2LjcwNTUgNi4xODMwNCAyOS41OTk3IDEyLjEwM0MzMS43MDQ1IDE2LjE4MTIgMzMuODA5NCAyMC4yNTkzIDM2LjA0NTggMjQuMzM3NUMzOS41OTc4IDMwLjkxNTIgNDMuMDE4MiAzNy42MjQ1IDQ2LjU3MDIgNDQuMjAyMkM1Mi4yMjcgNTQuOTg5NiA1OC4wMTU0IDY1Ljc3NzEgNjMuNjcyMiA3Ni41NjQ1QzYzLjgwMzcgNzYuNjk2IDYzLjgwMzcgNzYuODI3NiA2My45MzUzIDc2Ljk1OTJDNjQuNDYxNSA3Ny42MTY5IDY0LjcyNDYgNzcuNjE2OSA2NS4xMTkzIDc2Ljk1OTJDNjYuMzAzMyA3NC44NTQzIDY3LjM1NTcgNzIuNzQ5NCA2OC40MDgxIDcwLjc3NjFDNzQuMTk2NSA1OS45ODg3IDc5Ljk4NDkgNDkuMjAxMiA4NS43NzMzIDM4LjI4MjJDOTAuNjQwOCAyOS4yMDUgOTUuMzc2NyAyMC4yNTkzIDEwMC4yNDQgMTEuMTgyMUMxMDIuNjEyIDYuODQwODEgMTA1LjkwMSAzLjU1MTk2IDExMC42MzcgMS44NDE3NkMxMTQuODQ3IDAuMzk0NjYyIDExOS4wNTYgMC4xMzE1NTQgMTIzLjM5OCAxLjE4Mzk5QzEyNC4zMTkgMS40NDcxIDEyNS4xMDggMS44NDE3NiAxMjUuODk3IDIuNDk5NTNDMTI2LjQyMyAzLjAyNTc0IDEyNi44MTggMy42ODM1MiAxMjYuODE4IDQuNjA0MzlDMTI2LjgxOCA1LjEzMDYxIDEyNi44MTggNS42NTY4MyAxMjYuODE4IDYuMTgzMDRDMTI2LjgxOCA0Mi42MjM1IDEyNi44MTggNzguOTMyNSAxMjYuODE4IDExNS4zNzNDMTI2LjgxOCAxMTkuMTg4IDEyNS41MDMgMTIwLjYzNSAxMjEuNjg4IDEyMS4yOTNDMTE5LjQ1MSAxMjEuNjg4IDExNy4wODMgMTIxLjY4OCAxMTQuODQ3IDEyMS4xNjFDMTEyLjA4NCAxMjAuNjM1IDExMC4yNDIgMTE4LjkyNSAxMTAuMjQyIDExNS43NjhDMTEwLjI0MiA4Ny4yMjA0IDExMC4yNDIgNTguNTQxNiAxMTAuMjQyIDI5Ljk5NDNDMTEwLjI0MiAyOS4zMzY2IDExMC4zNzQgMjguNTQ3MiAxMTAuMTExIDI3Ljg4OTVDMTA5LjQ1MyAyNy44ODk1IDEwOS40NTMgMjguNDE1NyAxMDkuMzIxIDI4LjY3ODhDMTA0Ljg0OSAzNi43MDM2IDEwMC41MDcgNDQuNzI4NCA5Ni4xNjYgNTIuNzUzMkM5Mi42MTQxIDU5LjMzMDkgODguOTMwNiA2NS45MDg2IDg1LjI0NzEgNzIuNDg2M0M4Mi4zNTI5IDc3Ljc0ODUgNzkuNDU4NyA4My4wMTA2IDc2LjY5NiA4OC4xNDEzQzc0Ljk4NTggOTEuMjk4NiA3My40MDcyIDk0LjQ1NTkgNzEuNTY1NCA5Ny40ODE2QzY3Ljc1MDQgMTAzLjc5NiA1OS4zMzA5IDEwMy45MjggNTUuNTE1OCA5Ny43NDQ3QzUzLjY3NDEgOTQuNzE5IDUyLjA5NTQgOTEuNDMwMSA1MC41MTY4IDg4LjQwNDRDNDYuNzAxNyA4MS4xNjg5IDQyLjg4NjYgNzMuOTMzNCAzOS4wNzE2IDY2LjY5NzlDMzMuMTUxNiA1NS41MTU4IDI3LjM2MzMgNDQuNDY1MyAyMS40NDMzIDMzLjI4MzJDMjAuMzkwOSAzMS4xNzgzIDE5LjIwNjkgMjkuMDczNSAxOC4xNTQ1IDI3LjEwMDFDMTguMDIyOSAyNi44MzcgMTcuODkxNCAyNi40NDI0IDE3LjQ5NjcgMjYuNDQyNEMxNi45NzA1IDI2LjcwNTUgMTcuMjMzNiAyNy4xMDAxIDE3LjIzMzYgMjcuMzYzM0MxNy4yMzM2IDI4LjQxNTcgMTcuMjMzNiAyOS40NjgxIDE3LjIzMzYgMzAuNTIwNkMxNy4yMzM2IDU4LjY3MzEgMTcuMjMzNiA4Ni42OTQyIDE3LjIzMzYgMTE0Ljg0N0MxNy4yMzM2IDExNS4yNDEgMTcuMjMzNiAxMTUuNzY4IDE3LjIzMzYgMTE2LjE2MkMxNy4zNjUxIDExOS4wNTYgMTYuMTgxMiAxMjAuMzcyIDEzLjE1NTQgMTIxLjE2MUMxMC4zOTI4IDEyMS45NTEgNy40OTg1OCAxMjEuODE5IDQuNzM1OTUgMTIxLjE2MUMzLjI4ODg1IDEyMC43NjcgMS44NDE3NiAxMjAuMTA5IDEuMDUyNDMgMTE4LjY2MkMwLjUyNjIxNiAxMTguMzk5IDAuMzk0NjYyIDExOC4xMzYgMCAxMTguMTM2QzAgNzkuOTg0OSAwIDQxLjgzNDIgMCAzLjY4MzUyQzAuMjYzMTA4IDMuNjgzNTIgMC41MjYyMTYgMy42ODM1MiAwLjY1Nzc3MSAzLjI4ODg1QzEuMTgzOTkgMS45NzMzMSAyLjM2Nzk3IDEuMzE1NTQgMy42ODM1MSAwLjc4OTMyNUM0LjM0MTI5IDAuMzk0NjYyIDUuMjYyMTYgMC42NTc3NzEgNS45MTk5MyAwQzguMTU2MzUgMCAxMC4yNjEyIDAgMTIuNDk3NiAwWiIgZmlsbD0id2hpdGUiPjwvcGF0aD4KPHBhdGggZD0iTTgyMC4yNCAxNTQuODM5QzgyMC4xMDggMTU1LjEwMiA4MTkuOTc3IDE1NS4zNjUgODE5Ljk3NyAxNTUuNjI4QzgxOS4wNTYgMTU5LjcwNiA4MTYuMTYyIDE2MS45NDMgODEyLjQ3OCAxNjMuNTIxQzgwOS41ODQgMTY0LjcwNSA4MDYuNTU4IDE2NS4yMzIgODAzLjI2OSAxNjUuMUM4MDEuMjk2IDE2NS4xIDc5OS4xOTEgMTY1LjEgNzk3LjIxOCAxNjUuMUM3OTUuNzcxIDE2NS4xIDc5NS42MzkgMTY1LjIzMiA3OTUuNjM5IDE2Ni42NzlDNzk1LjYzOSAxNzEuNjc4IDc5NS42MzkgMTc2LjY3NyA3OTUuNjM5IDE4MS42NzZDNzk1LjYzOSAxODEuOTM5IDc5NS42MzkgMTgyLjMzNCA3OTUuNjM5IDE4Mi41OTdDNzk1LjYzOSAxODQuMDQ0IDc5NS42MzkgMTg0LjA0NCA3OTQuMTkyIDE4NC4wNDRDNzkzLjQwMyAxODQuMDQ0IDc5Mi42MTQgMTg0LjA0NCA3OTEuOTU2IDE4NC4wNDRDNzkxLjAzNSAxODQuMDQ0IDc5MC43NzIgMTgzLjY0OSA3OTAuNzcyIDE4Mi44NkM3OTAuNzcyIDE4Mi41OTcgNzkwLjc3MiAxODIuMjAyIDc5MC43NzIgMTgxLjkzOUM3OTAuNzcyIDE2OC43ODQgNzkwLjc3MiAxNTUuNzYgNzkwLjc3MiAxNDIuNjA0Qzc5MC43NzIgMTQyLjM0MSA3OTAuNzcyIDE0MS45NDYgNzkwLjc3MiAxNDEuNjgzQzc5MC43NzIgMTQwLjQ5OSA3OTAuOTAzIDE0MC4zNjggNzkxLjk1NiAxNDAuMzY4Qzc5Ni45NTUgMTQwLjM2OCA4MDIuMDg1IDE0MC4yMzYgODA3LjA4NCAxNDAuNDk5QzgxMC4yNDIgMTQwLjYzMSA4MTMuMjY4IDE0MS41NTIgODE1Ljg5OSAxNDMuMzk0QzgxOC4xMzUgMTQ0Ljk3MiA4MTkuNzE0IDE0Ny4wNzcgODIwLjEwOCAxNDkuODRDODIwLjEwOCAxNTAuMTAzIDgyMC4yNCAxNTAuMzY2IDgyMC4zNzEgMTUwLjYyOUM4MjAuMjQgMTUyLjA3NiA4MjAuMjQgMTUzLjUyMyA4MjAuMjQgMTU0LjgzOVpNNzk1LjYzOSAxNTIuNjAyQzc5NS42MzkgMTU1LjEwMiA3OTUuNjM5IDE1Ny42MDEgNzk1LjYzOSAxNjAuMTAxQzc5NS42MzkgMTYxLjI4NSA3OTUuNzcxIDE2MS40MTcgNzk2Ljk1NSAxNjEuNDE3Qzc5OS4xOTEgMTYxLjQxNyA4MDEuNTU5IDE2MS41NDggODAzLjc5NiAxNjEuMjg1QzgwNS42MzcgMTYxLjE1MyA4MDcuNjExIDE2MC44OSA4MDkuNDUyIDE2MC4zNjRDODEyLjc0MSAxNTkuMTggODE0Ljg0NiAxNTcuMDc1IDgxNS4yNDEgMTUzLjUyM0M4MTUuNTA0IDE1MC4zNjYgODE0LjE4OCAxNDYuNDE5IDgxMC4xMSAxNDQuODQxQzgwOC41MzIgMTQ0LjE4MyA4MDYuOTUzIDE0My45MiA4MDUuMzc0IDE0My45MkM4MDIuNzQzIDE0My43ODggNzk5Ljk4MSAxNDMuNzg4IDc5Ny4zNDkgMTQzLjkyQzc5NS43NzEgMTQzLjkyIDc5NS42MzkgMTQ0LjA1MSA3OTUuNjM5IDE0NS42M0M3OTUuNjM5IDE0Ny45OTggNzk1LjYzOSAxNTAuMzY2IDc5NS42MzkgMTUyLjYwMloiIGZpbGw9IndoaXRlIj48L3BhdGg+CjxwYXRoIGQ9Ik0zNTguMjIyIDY0Ljk4OEMzNTguNjE2IDY1LjY0NTggMzU5LjI3NCA2NS45MDg5IDM1OS45MzIgNjYuMzAzNkMzNjQuNDA1IDY5LjE5NzggMzY3Ljk1NyA3Mi44ODEzIDM3MC4zMjUgNzcuNzQ4OEMzNzEuNzcyIDgwLjkwNjEgMzcyLjU2MSA4NC4zMjY1IDM3Mi41NjEgODcuNzQ2OUMzNzIuNTYxIDk3Ljc0NSAzNzIuNTYxIDEwNy43NDMgMzcyLjU2MSAxMTcuODczQzM3Mi41NjEgMTIwLjEwOSAzNzEuNjQgMTIxLjE2MiAzNjkuNTM1IDEyMS42ODhDMzY3LjE2NyAxMjIuMzQ2IDM2NC42NjggMTIyLjIxNCAzNjIuMTY4IDEyMi4yMTRDMzYwLjk4NCAxMjIuMjE0IDM1OS45MzIgMTIxLjk1MSAzNTguNzQ4IDEyMS42ODhDMzU2LjUxMSAxMjEuMTYyIDM1NS41OTEgMTE5Ljg0NiAzNTUuNTkxIDExNy40NzhDMzU1LjU5MSAxMDguNTMyIDM1NS40NTkgOTkuNDU1MiAzNTUuNTkxIDkwLjUwOTVDMzU1LjU5MSA4Ny4yMjA3IDM1NC41MzggODQuNDU4IDM1Mi45NTkgODEuNjk1NEMzNDkuNTM5IDc1LjY0MzkgMzQ0LjE0NSA3Mi43NDk3IDMzNy40MzYgNzEuNTY1N0MzMzQuNDEgNzEuMDM5NSAzMzEuMzg1IDcxLjAzOTUgMzI4LjIyNyA3MS4wMzk1QzMxOC4zNjEgNzEuMDM5NSAzMDguNDk0IDcxLjAzOTUgMjk4LjYyOCA3MS4wMzk1QzI5Ni4zOTEgNzEuMDM5NSAyOTYuMzkxIDcxLjAzOTUgMjk2LjM5MSA3My4yNzU5QzI5Ni4zOTEgODguMDEgMjk2LjM5MSAxMDIuNzQ0IDI5Ni4zOTEgMTE3LjQ3OEMyOTYuMzkxIDEyMC4yNDEgMjk1LjQ3IDEyMS40MjUgMjkyLjgzOSAxMjIuMDgzQzI4OS40MTkgMTIyLjg3MiAyODUuOTk4IDEyMi44NzIgMjgyLjU3OCAxMjIuMDgzQzI4MS43ODkgMTIxLjk1MSAyODEuMTMxIDEyMS42ODggMjgwLjQ3MyAxMjEuMTYyQzI3OS42ODQgMTIwLjYzNSAyNzkuMTU4IDExOS44NDYgMjc5LjAyNiAxMTguOTI1QzI3OS4wMjYgMTE4LjI2NyAyNzguODk1IDExNy40NzggMjc4Ljg5NSAxMTYuODJDMjc4Ljg5NSA3OC44MDEyIDI3OC44OTUgNDAuNzgyMSAyNzguODk1IDIuNzYyOTNDMjc4Ljg5NSAwLjI2MzQwNCAyNzguODk1IDAuNTI2NTEzIDI4MS4xMzEgMC41MjY1MTNDMjk2LjkxNyAwLjUyNjUxMyAzMTIuODM1IDAuNTI2NTEzIDMyOC42MjIgMC41MjY1MTNDMzM0LjY3MyAwLjUyNjUxMyAzNDAuNzI1IDAuOTIxMTc1IDM0Ni42NDUgMi4xMDUxNkMzNTMuMDkxIDMuNDIwNyAzNTkuMDExIDUuNzg4NjggMzY0LjAxIDEwLjI2MTVDMzY5LjAwOSAxNC43MzQ0IDM3Mi4yOTggMjAuMjU5NiAzNzMuNzQ1IDI2LjgzNzNDMzc1LjQ1NSAzNS4xMjUyIDM3NC45MjkgNDMuMTUgMzcxLjY0IDUxLjA0MzNDMzY5LjE0MSA1Ni45NjMyIDM2NC43OTkgNjEuMTczIDM1OS4yNzQgNjQuNDYxOEMzNTguODc5IDY0LjQ2MTggMzU4LjQ4NSA2NC41OTM0IDM1OC4yMjIgNjQuOTg4Wk0yOTYuNTIzIDM1LjY1MTVDMjk2LjUyMyA0Mi4yMjkyIDI5Ni41MjMgNDguODA2OSAyOTYuNTIzIDU1LjM4NDZDMjk2LjUyMyA1Ni45NjMyIDI5Ni41MjMgNTcuMDk0OCAyOTguMjMzIDU3LjA5NDhDMzA4Ljg4OSA1Ny4wOTQ4IDMxOS41NDUgNTcuMjI2MyAzMzAuMzMyIDU2Ljk2MzJDMzM1Ljg1NyA1Ni44MzE3IDM0MS4yNTEgNTUuNzc5MiAzNDYuMjUgNTMuMjc5N0MzNTAuOTg2IDUxLjA0MzMgMzU0LjI3NSA0Ny40OTEzIDM1NS44NTQgNDIuMzYwN0MzNTYuNzc1IDM5LjU5ODEgMzU2Ljc3NSAzNi44MzU0IDM1Ni43NzUgMzQuMDcyOEMzNTYuNjQzIDI1LjkxNjUgMzUxLjExOCAxNy43NjAxIDM0Mi4xNzIgMTUuMzkyMUMzMzguMDk0IDE0LjMzOTcgMzMzLjg4NCAxNC4yMDgxIDMyOS44MDYgMTQuMjA4MUMzMTkuNTQ1IDE0LjIwODEgMzA5LjE1MiAxNC4yMDgxIDI5OC44OTEgMTQuMjA4MUMyOTguNjI4IDE0LjIwODEgMjk4LjIzMyAxNC4yMDgxIDI5Ny45NyAxNC4yMDgxQzI5Ni45MTcgMTQuMzM5NyAyOTYuNzg2IDE0LjMzOTcgMjk2Ljc4NiAxNS41MjM3QzI5Ni43ODYgMTUuOTE4MyAyOTYuNzg2IDE2LjQ0NDYgMjk2Ljc4NiAxNi44MzkyQzI5Ni41MjMgMjMuMTUzOCAyOTYuNTIzIDI5LjQ2ODQgMjk2LjUyMyAzNS42NTE1WiIgZmlsbD0id2hpdGUiPjwvcGF0aD4KPHBhdGggZD0iTTU0Mi41MjkgMC43ODk0OEM1NDQuODk3IDAuNzg5NDggNTQ3LjEzNCAxLjA1MjU5IDU0OS4zNyAxLjcxMDM2QzU1MS42MDcgMi4zNjgxMyA1NTMuMTg1IDMuODE1MjMgNTU0LjIzOCA2LjA1MTY1QzU1OC40NDcgMTUuMzkyIDU2Mi43ODkgMjQuNzMyMyA1NjYuOTk5IDMzLjk0MTFDNTcyLjI2MSA0NS4yNTQ4IDU3Ny4zOTEgNTYuNTY4NCA1ODIuNjUzIDY4LjAxMzZDNTg3Ljc4NCA3OS4xOTU3IDU5Mi45MTUgOTAuNTA5NCA1OTguMTc3IDEwMS42OTFDNjAwLjU0NSAxMDYuODIyIDYwMi45MTMgMTEyLjA4NCA2MDUuMjgxIDExNy4yMTVDNjA1LjQxMiAxMTcuNDc4IDYwNS41NDQgMTE3Ljc0MSA2MDUuNjc1IDExOC4wMDRDNjA2LjA3IDExOS4xODggNjA1LjkzOSAxMTkuNTgzIDYwNC44ODYgMTIwLjEwOUM2MDMuNTcxIDEyMC43NjcgNjAyLjEyMyAxMjEuMDMgNjAwLjY3NiAxMjEuMjkzQzU5Ny41MTkgMTIxLjgxOSA1OTQuMzYyIDEyMS44MTkgNTkxLjIwNCAxMjEuMjkzQzU5MC4wMiAxMjEuMDMgNTg4Ljk2OCAxMjAuNjM1IDU4Ny45MTYgMTIwLjEwOUM1ODYuODYzIDExOS41ODMgNTg2LjIwNSAxMTguNzk0IDU4NS42NzkgMTE3Ljc0MUM1ODMuODM3IDExMy42NjMgNTgyLjEyNyAxMDkuNTg1IDU4MC4yODUgMTA1LjYzOEM1NzcuMjYgOTguOTI4OSA1NzQuMjM0IDkyLjIxOTYgNTcxLjM0IDg1LjUxMDNDNTY4LjU3NyA3OS4zMjczIDU2NS44MTUgNzMuMDEyNyA1NjIuOTIgNjYuODI5NkM1NjAuMDI2IDYwLjM4MzUgNTU3LjEzMiA1My44MDU4IDU1NC4yMzggNDcuMzU5NkM1NTEuNDc1IDQxLjMwODEgNTQ4Ljg0NCAzNS4yNTY3IDU0Ni4wODEgMjkuMjA1MkM1NDUuNDI0IDI3Ljc1ODEgNTQ0Ljc2NiAyNi4zMTEgNTQ0LjEwOCAyNC44NjM5QzU0My45NzcgMjQuNDY5MiA1NDMuODQ1IDIzLjgxMTQgNTQzLjE4NyAyMy44MTE0QzU0Mi42NjEgMjMuODExNCA1NDIuNjYxIDI0LjQ2OTIgNTQyLjUyOSAyNC44NjM5QzU0MS4zNDUgMjcuNjI2NSA1NDAuMDMgMzAuMzg5MiA1MzguODQ2IDMzLjE1MThDNTM1Ljk1MiAzOS43Mjk1IDUzMy4wNTggNDYuMzA3MiA1MzAuMTYzIDUyLjg4NDlDNTI2Ljc0MyA2MC43NzgyIDUyMy4xOTEgNjguNjcxNCA1MTkuNzcxIDc2LjY5NjJDNTE2LjIxOSA4NC44NTI2IDUxMi42NjcgOTIuODc3NCA1MDkuMTE1IDEwMS4wMzRDNTA2Ljg3OCAxMDYuMTY0IDUwNC41MSAxMTEuMjk1IDUwMi40MDUgMTE2LjU1N0M1MDEuMzUzIDExOS4zMiA0OTkuMzggMTIwLjYzNSA0OTYuNjE3IDEyMS4xNjFDNDkzLjE5NyAxMjEuNjg4IDQ4OS43NzYgMTIxLjgxOSA0ODYuMzU2IDEyMS4xNjFDNDg1LjY5OCAxMjEuMDMgNDg1LjA0IDEyMC44OTggNDg0LjUxNCAxMjAuNTA0QzQ4My4xOTkgMTE5Ljg0NiA0ODIuODA0IDExOS4xODggNDgzLjQ2MiAxMTcuNzQxQzQ4NC4zODMgMTE1LjM3MyA0ODUuNDM1IDExMy4xMzcgNDg2LjM1NiAxMTAuNzY5QzQ4OS4xMTggMTA0LjE5MSA0OTIuMDEzIDk3Ljc0NDkgNDk0Ljc3NSA5MS4xNjcyQzQ5OS4xMTcgODEuMDM3NSA1MDMuNTg5IDcwLjkwNzggNTA3LjkzMSA2MC42NDY2QzUxMC44MjUgNTMuOTM3MyA1MTMuNzE5IDQ3LjIyODEgNTE2LjQ4MiA0MC41MTg4QzUyMC4yOTcgMzEuNzA0NyA1MjQuMTEyIDIyLjc1OSA1MjcuOTI3IDEzLjk0NDlDNTI5LjExMSAxMS4zMTM4IDUzMC4xNjMgOC42ODI3MyA1MzEuMzQ3IDYuMDUxNjVDNTMyLjI2OCAzLjgxNTIzIDUzMy45NzggMi4zNjgxMyA1MzYuMzQ2IDEuNTc4ODFDNTM4LjE4OCAwLjkyMTAzNCA1NDAuNDI1IDAuNjU3OTI2IDU0Mi41MjkgMC43ODk0OFoiIGZpbGw9IndoaXRlIj48L3BhdGg+CjxwYXRoIGQ9Ik0yMDEuODA0IDIzLjU0ODdDMjAxLjAxNSAyMy44MTE4IDIwMS4wMTUgMjQuMzM4IDIwMC43NTIgMjQuNzMyN0MxOTUuODg0IDM1Ljc4MzIgMTkxLjE0OCA0Ni44MzM4IDE4Ni4yODEgNTcuODg0M0MxODEuOTM5IDY3Ljg4MjQgMTc3LjQ2NyA3Ny44ODA1IDE3My4xMjUgODcuNzQ3MUMxNjkuMzEgOTYuNDI5NyAxNjUuNDk1IDEwNS4xMTIgMTYxLjY4IDExMy43OTVDMTYxLjE1NCAxMTUuMTEgMTYwLjQ5NiAxMTYuMjk0IDE1OS45NyAxMTcuNjFDMTU5LjQ0NCAxMTguOTI1IDE1OC41MjMgMTE5LjcxNSAxNTcuMjA3IDEyMC4yNDFDMTU2LjAyMyAxMjAuNzY3IDE1NC44MzkgMTIxLjAzIDE1My41MjQgMTIxLjE2MkMxNTAuMzY2IDEyMS41NTcgMTQ3LjIwOSAxMjEuNjg4IDE0NC4wNTIgMTIwLjg5OUMxNDEuMDI2IDEyMC4yNDEgMTQwLjYzMSAxMTkuMzIgMTQxLjgxNSAxMTYuNTU3QzE0NC4zMTUgMTEwLjkwMSAxNDYuNjgzIDEwNS4yNDQgMTQ5LjA1MSA5OS43MTg1QzE1MS45NDUgOTMuMTQwOCAxNTQuNzA4IDg2LjU2MzEgMTU3LjYwMiA3OS45ODU0QzE2MC40OTYgNzMuNDA3NyAxNjMuMjU5IDY2LjY5ODQgMTY2LjE1MyA2MC4xMjA3QzE2OS41NzMgNTIuMjI3NSAxNzIuOTk0IDQ0LjMzNDIgMTc2LjQxNCAzNi40NDFDMTc5LjMwOCAyOS43MzE3IDE4Mi4yMDMgMjMuMDIyNSAxODUuMDk3IDE2LjMxMzJDMTg2LjU0NCAxMi44OTI4IDE4Ny45OTEgOS42MDM5NiAxODkuNDM4IDYuMTgzNTVDMTkwLjM1OSA0LjA3ODY5IDE5MS44MDYgMi42MzE1OSAxOTMuOTExIDEuOTczODJDMTk4Ljc3OCAwLjM5NTE3MyAyMDMuNjQ2IDAuMzk1MTczIDIwOC4zODIgMi4xMDUzOEMyMTAuMDkyIDIuNjMxNTkgMjExLjI3NiAzLjgxNTU4IDIxMi4wNjUgNS4zOTQyM0MyMTMuNjQ0IDguOTQ2MTkgMjE1LjM1NCAxMi40OTgyIDIxNy4wNjQgMTYuMTgxN0MyMjAuNDg1IDIzLjY4MDIgMjIzLjkwNSAzMS4xNzg4IDIyNy4zMjYgMzguNjc3NEMyMzEuMTQxIDQ2LjgzMzggMjM0LjgyNCA1NS4xMjE3IDIzOC42MzkgNjMuMjc4QzI0Mi45ODEgNzIuNjE4NCAyNDcuMTkgODEuODI3MiAyNTEuNTMyIDkxLjE2NzVDMjU1LjYxIDk5Ljk4MTYgMjU5LjY4OCAxMDguOTI3IDI2My43NjYgMTE3Ljc0MUMyNjQuNDI0IDExOS4xODkgMjY0LjI5MiAxMTkuNzE1IDI2Mi44NDUgMTIwLjI0MUMyNjEuNjYxIDEyMC43NjcgMjYwLjQ3NyAxMjEuMDMgMjU5LjE2MiAxMjEuMjkzQzI1NS44NzMgMTIxLjgyIDI1Mi41ODQgMTIxLjk1MSAyNDkuMjk1IDEyMS4yOTNDMjQ2LjY2NCAxMjAuNzY3IDI0NC41NTkgMTE5LjU4MyAyNDMuMzc1IDExNi44MjFDMjM5LjE2NSAxMDcuMDg2IDIzNC44MjQgOTcuNDgyMSAyMzAuNDgzIDg3Ljg3ODdDMjI3LjE5NCA4MC4zODAxIDIyMy43NzQgNzIuODgxNSAyMjAuNDg1IDY1LjM4MjlDMjE2LjQwNyA1Ni4zMDU3IDIxMi4zMjggNDcuMDk2OSAyMDguMTE5IDM4LjAxOTZDMjA2LjI3NyAzMy44MDk5IDIwNC4zMDQgMjkuNDY4NiAyMDIuNDYyIDI1LjI1ODlDMjAyLjMzIDI0LjYwMTEgMjAyLjA2NyAyNC4yMDY1IDIwMS44MDQgMjMuNTQ4N1oiIGZpbGw9IndoaXRlIj48L3BhdGg+CjxwYXRoIGQ9Ik00MzIuOTQ0IDY2Ljk2MDdDNDMyLjk0NCA1MC4yNTMzIDQzMi45NDQgMzMuNjc3NSA0MzIuOTQ0IDE2Ljk3MDFDNDMyLjk0NCAxNC4wNzYgNDMyLjk0NCAxNC4zMzkxIDQzMC40NDUgMTQuMzM5MUM0MjAuMTg0IDE0LjMzOTEgNDA5LjkyMiAxNC4zMzkxIDM5OS42NjEgMTQuMzM5MUMzOTYuNTA0IDE0LjMzOTEgMzk0Ljc5NCAxMy4yODY2IDM5NC4yNjcgOS42MDMxMUMzOTQuMDA0IDcuODkyOTEgMzk0LjEzNiA2LjA1MTE1IDM5NC4zOTkgNC4zNDA5NUMzOTQuNTMxIDMuNTUxNjIgMzk0Ljc5NCAyLjg5Mzg1IDM5NS4xODggMi4yMzYwOEMzOTUuODQ2IDEuMTgzNjUgMzk2Ljc2NyAwLjUyNTg3OSAzOTguMDgzIDAuNTI1ODc5QzM5OC40NzcgMC41MjU4NzkgMzk5LjAwMyAwLjUyNTg3OSAzOTkuMzk4IDAuNTI1ODc5QzQyNy42ODIgMC41MjU4NzkgNDU1Ljk2NiAwLjUyNTg3OSA0ODQuMjUgMC41MjU4NzlDNDg3LjE0NSAwLjUyNTg3OSA0ODguMDY2IDEuMzE1MiA0ODguNzIzIDQuMjA5MzlDNDg5LjExOCA2LjMxNDI2IDQ4OS4xMTggOC40MTkxMyA0ODguODU1IDEwLjM5MjRDNDg4LjU5MiAxMy4xNTUxIDQ4Ny41MzkgMTQuNDcwNiA0ODQuMzgyIDE0LjQ3MDZDNDczLjg1OCAxNC40NzA2IDQ2My40NjUgMTQuNDcwNiA0NTIuOTQxIDE0LjQ3MDZDNDUwLjE3OCAxNC40NzA2IDQ1MC40NDEgMTQuMzM5MSA0NTAuNDQxIDE3LjEwMTdDNDUwLjQ0MSA1MC4xMjE4IDQ1MC40NDEgODMuMTQxOSA0NTAuNDQxIDExNi4yOTNDNDUwLjQ0MSAxMTYuODIgNDUwLjQ0MSAxMTcuMzQ2IDQ1MC40NDEgMTE3Ljg3MkM0NTAuNDQxIDExOS4zMTkgNDQ5Ljc4MyAxMjAuMjQgNDQ4LjQ2OCAxMjAuNzY2QzQ0Ny4yODQgMTIxLjI5MyA0NDYuMSAxMjEuNTU2IDQ0NC43ODQgMTIxLjU1NkM0NDIuMTUzIDEyMS44MTkgNDM5LjUyMiAxMjEuODE5IDQzNi44OTEgMTIxLjQyNEM0MzYuMjMzIDEyMS4yOTMgNDM1LjcwNyAxMjEuMTYxIDQzNS4xODEgMTIwLjg5OEM0MzMuMjA3IDEyMC4xMDkgNDMyLjgxMyAxMTkuNTgyIDQzMi44MTMgMTE3LjQ3N0M0MzIuOTQ0IDEwMC42MzkgNDMyLjk0NCA4My43OTk2IDQzMi45NDQgNjYuOTYwN1oiIGZpbGw9IndoaXRlIj48L3BhdGg+CjxwYXRoIGQ9Ik02MjEuNTkzIDYyLjIyNDVDNjIxLjU5MyA0My44MDY5IDYyMS41OTMgMjUuMzg5MyA2MjEuNTkzIDYuOTcxNzVDNjIxLjU5MyA0LjIwOTExIDYyMi43NzcgMi42MzA0NiA2MjUuMDEzIDEuNTc4MDNDNjI4LjAzOSAwLjI2MjQ4NyA2MzEuMTk3IC0wLjAwMDYyMTE1IDYzNC4zNTQgMC42NTcxNDlDNjM3LjUxMSAxLjMxNDkyIDYzOS4wOSAyLjg5MzU3IDYzOS4wOSA2LjcwODY0QzYzOC45NTggMjkuMzM1OSA2MzkuMDkgNTEuOTYzMiA2MzkuMDkgNzQuNTkwNkM2MzkuMDkgODQuMTk0IDYzOS4wOSA5My43OTc0IDYzOS4wOSAxMDMuNDAxQzYzOS4wOSAxMDMuOTI3IDYzOS4wOSAxMDQuMzIyIDYzOS4wOSAxMDQuODQ4QzYzOS4wOSAxMDUuNjM3IDYzOS40ODQgMTA1LjkgNjQwLjI3NCAxMDUuOUM2NDAuOCAxMDUuOSA2NDEuMTk1IDEwNS45IDY0MS43MjEgMTA1LjlDNjYwLjY2NSAxMDUuOSA2NzkuNDc3IDEwNS45IDY5OC40MjEgMTA1LjlDNzAyLjYzIDEwNS45IDcwNC44NjcgMTA3Ljg3NCA3MDUuMTMgMTEyLjIxNUM3MDUuMjYxIDExMy45MjUgNzA1LjI2MSAxMTUuNTA0IDcwNC40NzIgMTE3LjA4M0M3MDMuNjgzIDExOC43OTMgNzAyLjIzNiAxMTkuNTgyIDcwMC4zOTQgMTE5Ljg0NUM2OTkuNDczIDExOS45NzcgNjk4LjY4NCAxMTkuOTc3IDY5Ny43NjMgMTE5Ljk3N0M2NzMuMTYyIDExOS45NzcgNjQ4LjQzIDExOS45NzcgNjIzLjgyOSAxMTkuOTc3QzYyMS4xOTggMTE5Ljk3NyA2MjEuNTkzIDEyMC4xMDggNjIxLjU5MyAxMTcuNjA5QzYyMS41OTMgOTkuMDU5NiA2MjEuNTkzIDgwLjY0MiA2MjEuNTkzIDYyLjIyNDVaIiBmaWxsPSJ3aGl0ZSI+PC9wYXRoPgo8cGF0aCBkPSJNNzA0LjIwOSAxMzkuNzExQzcwOC41NSAxMzkuNzExIDcxMi4zNjUgMTQwLjM2OSA3MTYuMDQ5IDE0MS45NDdDNzIwLjEyNyAxNDMuNzg5IDcyMy4xNTMgMTQ2LjY4MyA3MjUuMTI2IDE1MC40OThDNzI4LjgxIDE1Ny40NzEgNzI4LjgxIDE2NC44MzggNzI2LjA0NyAxNzIuMDczQzcyMy44MTEgMTc3LjczIDcxOS42MDEgMTgxLjU0NSA3MTMuNjgxIDE4My4zODdDNzA5LjIwOCAxODQuNzAyIDcwNC42MDQgMTg1LjA5NyA2OTkuODY4IDE4NC40MzlDNjk3Ljc2MyAxODQuMTc2IDY5NS43OSAxODMuNjUgNjkzLjgxNiAxODIuOTkyQzY4OC4xNiAxODAuNzU2IDY4NC4yMTMgMTc2LjgwOSA2ODIuMjQgMTcxLjAyMUM2ODAuMTM1IDE2NS4xMDEgNjgwLjEzNSAxNTkuMTgxIDY4Mi4yNCAxNTMuMTI5QzY4My41NTUgMTQ5LjMxNCA2ODUuOTIzIDE0Ni4xNTcgNjg5LjIxMiAxNDMuNzg5QzY5My40MjIgMTQxLjAyNiA2OTguNjg0IDEzOS41NzkgNzA0LjIwOSAxMzkuNzExWk03MjMuMDIxIDE2Mi4zMzhDNzIyLjg5IDE1OS4zMTIgNzIyLjQ5NSAxNTYuMjg3IDcyMS4xOCAxNTMuNTI0QzcxOS4wNzUgMTQ5LjE4MyA3MTUuOTE3IDE0NS44OTQgNzExLjE4MSAxNDQuMzE1QzcwOC4xNTYgMTQzLjI2MyA3MDQuOTk4IDE0MyA3MDEuODQxIDE0My4zOTRDNjk1IDE0NC4zMTUgNjkwLjI2NCAxNDcuODY3IDY4Ny42MzMgMTU0LjA1QzY4NS4zOTcgMTU5LjMxMiA2ODUuMzk3IDE2NC44MzggNjg3LjUwMiAxNzAuMjMxQzY4OS40NzUgMTc1LjQ5NCA2OTMuMjkgMTc4LjkxNCA2OTguNTUyIDE4MC42MjRDNzAxLjg0MSAxODEuNTQ1IDcwNS4yNjIgMTgxLjgwOCA3MDguNjgyIDE4MS4wMTlDNzEzLjQxOCAxODAuMDk4IDcxNy4yMzMgMTc3LjczIDcxOS44NjQgMTczLjUyQzcyMS45NjkgMTcwLjEgNzIyLjg5IDE2Ni40MTYgNzIzLjAyMSAxNjIuMzM4WiIgZmlsbD0id2hpdGUiPjwvcGF0aD4KPHBhdGggZD0iTTYyNi41OTIgMTcxLjY3OEM2MjYuNTkyIDE3NC41NzIgNjI2LjU5MiAxNzcuNTk4IDYyNi41OTIgMTgwLjQ5MkM2MjYuNTkyIDE4Mi4yMDMgNjI2LjU5MiAxODIuMzM0IDYyNS4wMTQgMTgyLjcyOUM2MjIuMTE5IDE4My42NSA2MTkuMzU3IDE4NC4xNzYgNjE2LjMzMSAxODQuNDM5QzYxMy43IDE4NC43MDIgNjExLjA2OSAxODQuODM0IDYwOC40MzggMTg0LjgzNEM2MDMuMzA3IDE4NC41NyA1OTguMzA4IDE4My42NSA1OTMuODM1IDE4MS4xNUM1ODYuOTk0IDE3Ny4yMDMgNTgzLjQ0MyAxNzEuMjg0IDU4My4xNzkgMTYzLjM5QzU4My4wNDggMTU5LjQ0NCA1ODMuNTc0IDE1NS40OTcgNTg1LjU0NyAxNTEuOTQ1QzU4OC4wNDcgMTQ3LjM0MSA1OTEuODYyIDE0NC4wNTIgNTk2LjczIDE0Mi4wNzlDNjAyLjc4MSAxMzkuNTc5IDYwOC45NjQgMTM5LjQ0NyA2MTUuMjc5IDEzOS45NzRDNjE3LjM4NCAxNDAuMTA1IDYxOS40ODggMTQwLjM2OCA2MjEuNTkzIDE0MC44OTVDNjI0Ljc1MSAxNDEuNjg0IDYyNC4zNTYgMTQxLjU1MiA2MjMuODMgMTQ0LjcxQzYyMy42OTggMTQ1LjIzNiA2MjMuNDM1IDE0NS4zNjcgNjIzLjA0IDE0NS4yMzZDNjIyLjI1MSAxNDQuOTczIDYyMS4zMyAxNDQuNzEgNjIwLjU0MSAxNDQuNDQ2QzYxNC4yMjYgMTQyLjg2OCA2MDcuOTEyIDE0Mi42MDUgNjAxLjU5NyAxNDQuNDQ2QzU5NC42MjUgMTQ2LjU1MSA1ODkuNjI2IDE1MS40MTkgNTg4LjMxIDE1OS4xODFDNTg3LjY1MiAxNjMuNjUzIDU4OC4xNzggMTY3Ljg2MyA1OTAuNDE1IDE3MS42NzhDNTkxLjk5NCAxNzQuNzA0IDU5NC40OTMgMTc2Ljk0IDU5Ny41MTkgMTc4LjUxOUM2MDIuNjQ5IDE4MS4xNSA2MDguMTc1IDE4MS42NzYgNjEzLjgzMiAxODEuMTVDNjE1LjkzNiAxODEuMDE5IDYxOC4wNDEgMTgwLjc1NSA2MjAuMTQ2IDE4MC4yMjlDNjIxLjU5MyAxNzkuODM1IDYyMS43MjUgMTc5LjcwMyA2MjEuNzI1IDE3OC4yNTZDNjIxLjcyNSAxNzQuMDQ2IDYyMS43MjUgMTY5LjgzNiA2MjEuNzI1IDE2NS42MjdDNjIxLjcyNSAxNjQuMTggNjIxLjU5MyAxNjQuMDQ4IDYyMC4yNzggMTY0LjA0OEM2MTcuMTIgMTY0LjA0OCA2MTMuOTYzIDE2NC4wNDggNjEwLjgwNiAxNjQuMDQ4QzYwOS4zNTkgMTY0LjA0OCA2MDkuMzU5IDE2NC4wNDggNjA5LjM1OSAxNjIuNjAxQzYwOS4zNTkgMTYyLjMzOCA2MDkuMzU5IDE2MS45NDMgNjA5LjM1OSAxNjEuNjhDNjA5LjM1OSAxNjEuMDIyIDYwOS43NTMgMTYwLjYyOCA2MTAuNDExIDE2MC42MjhDNjExLjA2OSAxNjAuNjI4IDYxMS41OTUgMTYwLjYyOCA2MTIuMjUzIDE2MC42MjhDNjE2LjU5NCAxNjAuNjI4IDYyMC45MzUgMTYwLjYyOCA2MjUuMjc3IDE2MC42MjhDNjI2Ljg1NSAxNjAuNjI4IDYyNi44NTUgMTYwLjYyOCA2MjYuODU1IDE2Mi4zMzhDNjI2LjU5MiAxNjUuMzY0IDYyNi41OTIgMTY4LjUyMSA2MjYuNTkyIDE3MS42NzhaIiBmaWxsPSJ3aGl0ZSI+PC9wYXRoPgo8cGF0aCBkPSJNNjU4Ljk1NCAxNjEuNjhDNjU5LjM0OSAxNjIuNDY5IDY1OS44NzUgMTYyLjQ2OSA2NjAuMjcgMTYyLjYwMUM2NjEuMzIyIDE2Mi44NjQgNjYyLjI0MyAxNjMuNTIyIDY2Mi45MDEgMTY0LjQ0M0M2NjMuODIyIDE2NS40OTUgNjY0LjQ4IDE2Ni42NzkgNjY1LjEzOCAxNjcuODYzQzY2Ny43NjkgMTcyLjU5OSA2NzAuNCAxNzcuNDY3IDY3Mi44OTkgMTgyLjMzNEM2NzMuMTYyIDE4Mi44NiA2NzMuNTU3IDE4My4zODYgNjczLjU1NyAxODQuMTc2QzY3MS45NzggMTg0LjU3IDY3MC40IDE4NC4zMDcgNjY4LjY4OSAxODQuMzA3QzY2OC4wMzIgMTg0LjMwNyA2NjcuOSAxODMuNjUgNjY3LjYzNyAxODMuMTIzQzY2Ni4wNTggMTgwLjIyOSA2NjQuNjExIDE3Ny4yMDMgNjYzLjAzMyAxNzQuMzA5QzY2MS44NDkgMTcyLjIwNCA2NjAuNzk2IDE3MC4wOTkgNjU5LjYxMiAxNjcuOTk1QzY1OC4wMzQgMTY1LjIzMiA2NTUuNTM0IDE2My43ODUgNjUyLjM3NyAxNjMuNzg1QzY1MC41MzUgMTYzLjc4NSA2NDguNjkzIDE2My43ODUgNjQ2Ljg1MiAxNjMuNzg1QzY0NS42NjggMTYzLjc4NSA2NDUuNTM2IDE2My45MTYgNjQ1LjUzNiAxNjUuMUM2NDUuNTM2IDE2Ny42IDY0NS41MzYgMTY5Ljk2OCA2NDUuNTM2IDE3Mi40NjdDNjQ1LjUzNiAxNzYuMDE5IDY0NS41MzYgMTc5LjQ0IDY0NS41MzYgMTgyLjk5MkM2NDUuNTM2IDE4NC4zMDcgNjQ1LjUzNiAxODQuMzA3IDY0NC4yMiAxODQuNDM5QzY0My41NjMgMTg0LjQzOSA2NDMuMDM2IDE4NC40MzkgNjQyLjM3OSAxODQuNDM5QzY0MC42NjggMTg0LjQzOSA2NDAuNjY4IDE4NC40MzkgNjQwLjY2OCAxODIuNTk3QzY0MC42NjggMTcwLjQ5NCA2NDAuNjY4IDE1OC4zOTEgNjQwLjY2OCAxNDYuMjg4QzY0MC42NjggMTQ0Ljg0MSA2NDAuNjY4IDE0My4zOTQgNjQwLjY2OCAxNDIuMDc4QzY0MC42NjggMTQwLjg5NCA2NDAuOCAxNDAuODk0IDY0MS44NTIgMTQwLjg5NEM2NDYuOTgzIDE0MC44OTQgNjUyLjExNCAxNDAuNzYzIDY1Ny4yNDQgMTQxLjAyNkM2NjAuNDAyIDE0MS4xNTggNjYzLjU1OSAxNDEuOTQ3IDY2Ni4xOSAxNDMuOTJDNjY4LjAzMiAxNDUuMzY3IDY2OS4zNDcgMTQ3LjA3OCA2NjkuNjEgMTQ5LjQ0NUM2NzAuMjY4IDE1NC4xODEgNjY5LjYxIDE1Ny40NyA2NjQuMzQ4IDE2MC4zNjRDNjYyLjc3IDE2MC43NTkgNjYxLjA1OSAxNjEuNDE3IDY1OC45NTQgMTYxLjY4Wk02NDUuNTM2IDE1MS44MTNDNjQ1LjUzNiAxNTQuMDUgNjQ1LjUzNiAxNTYuMjg2IDY0NS41MzYgMTU4LjUyM0M2NDUuNTM2IDE1OS41NzUgNjQ1LjY2OCAxNTkuODM4IDY0Ni43MiAxNTkuODM4QzY0OS44NzcgMTU5LjgzOCA2NTIuOTAzIDE1OS45NyA2NTYuMDYgMTU5LjQ0NEM2NTguMTY1IDE1OS4wNDkgNjYwLjEzOCAxNTguMzkxIDY2MS44NDkgMTU3LjIwN0M2NjQuMjE3IDE1NS40OTcgNjY1LjI2OSAxNTMuMjYxIDY2NC44NzQgMTUwLjM2NkM2NjQuNDggMTQ3LjQ3MiA2NjIuOTAxIDE0NS42MyA2NjAuMTM4IDE0NC43MUM2NTkuMzQ5IDE0NC40NDYgNjU4LjU2IDE0NC4zMTUgNjU3Ljc3IDE0NC4xODNDNjU0LjIxOSAxNDMuNjU3IDY1MC42NjcgMTQzLjc4OSA2NDcuMTE1IDE0My43ODlDNjQ1Ljc5OSAxNDMuNzg5IDY0NS42NjcgMTQzLjkyIDY0NS42NjcgMTQ1LjM2N0M2NDUuNTM2IDE0Ny42MDQgNjQ1LjUzNiAxNDkuNzA5IDY0NS41MzYgMTUxLjgxM1oiIGZpbGw9IndoaXRlIj48L3BhdGg+CjxwYXRoIGQ9Ik03NzcuNDg1IDE1Ny42MDFDNzc3LjM1MyAxNjEuNDE2IDc3Ny43NDggMTY2LjI4NCA3NzcuMzUzIDE3MS4wMkM3NzcuMDkgMTc1LjM2MSA3NzQuOTg1IDE3OC43ODIgNzcxLjU2NSAxODEuMTVDNzY4LjkzNCAxODIuOTkxIDc2NS43NzcgMTg0LjA0NCA3NjIuNjE5IDE4NC41N0M3NjAuNjQ2IDE4NC44MzMgNzU4LjY3MyAxODUuMDk2IDc1Ni42OTkgMTg0Ljk2NUM3NTIuMzU4IDE4NC41NyA3NDguMDE3IDE4My43ODEgNzQ0LjMzMyAxODEuMDE4Qzc0MS4zMDcgMTc4Ljc4MiA3MzkuNDY2IDE3NS44ODcgNzM4Ljk0IDE3Mi4wNzJDNzM4LjgwOCAxNzAuODg4IDczOC42NzYgMTY5LjgzNiA3MzguNjc2IDE2OC42NTJDNzM4LjY3NiAxNTkuOTY5IDczOC42NzYgMTUxLjI4NyA3MzguNjc2IDE0Mi43MzZDNzM4LjY3NiAxNDIuNDczIDczOC42NzYgMTQyLjA3OCA3MzguNjc2IDE0MS44MTVDNzM4LjY3NiAxNDAuNjMxIDczOC44MDggMTQwLjQ5OSA3MzkuOTkyIDE0MC40OTlDNzQ0LjA3IDE0MC40OTkgNzQzLjU0NCAxMzkuOTczIDc0My41NDQgMTQzLjkyQzc0My41NDQgMTUxLjY4MSA3NDMuNTQ0IDE1OS4zMTIgNzQzLjU0NCAxNjcuMDczQzc0My41NDQgMTY4LjkxNSA3NDMuNTQ0IDE3MC43NTcgNzQ0LjA3IDE3Mi40NjdDNzQ1LjI1NCAxNzYuNDE0IDc0Ny43NTQgMTc5LjE3NiA3NTEuNTY5IDE4MC40OTJDNzU1Ljc3OCAxODEuOTM5IDc1OS45ODggMTgxLjkzOSA3NjQuMzI5IDE4MC40OTJDNzY4LjkzNCAxNzguOTEzIDc3Mi4wOTEgMTc0LjgzNSA3NzIuMjIzIDE2OS45NjhDNzcyLjM1NCAxNjQuMzExIDc3Mi4yMjMgMTU4LjUyMiA3NzIuMjIzIDE1Mi44NjVDNzcyLjIyMyAxNDkuMzE0IDc3Mi4yMjMgMTQ1LjYzIDc3Mi4yMjMgMTQyLjA3OEM3NzIuMjIzIDE0MC42MzEgNzcyLjIyMyAxNDAuNjMxIDc3My42NyAxNDAuNjMxQzc3NC41OTEgMTQwLjYzMSA3NzUuNTEyIDE0MC42MzEgNzc2LjQzMiAxNDAuNjMxQzc3Ni45NTkgMTQwLjYzMSA3NzcuMjIyIDE0MC44OTQgNzc3LjIyMiAxNDEuNDJDNzc3LjIyMiAxNDEuOTQ2IDc3Ny4yMjIgMTQyLjM0MSA3NzcuMjIyIDE0Mi44NjdDNzc3LjQ4NSAxNDcuMzQgNzc3LjQ4NSAxNTIuMDc2IDc3Ny40ODUgMTU3LjYwMVoiIGZpbGw9IndoaXRlIj48L3BhdGg+Cjwvc3ZnPg==">
+    </div>
+    <div>
+      <p class="kicker">Account Management Module</p>
+      <h2>Client Assessments: Weeks 3, 6 and 9</h2>
+    </div>
+    <ul class="nav" id="nav"></ul>
+    <div class="progress">
+      <div class="lbl"><span>Your progress</span><span id="pct">0%</span></div>
+      <div class="bar"><span id="bar"></span></div>
+    </div>
+  </aside>
+
+  <main>
+    <!-- 1 OVERVIEW -->
+    <section class="view" id="v-overview" data-title="The standard">
+      <div class="hero">
+        <p class="overline">The standard</p>
+        <h1>Lead the account before the client has to ask.</h1>
+        <p class="lead">Three times in every engagement, the Account Manager steps back from the weekly numbers, assesses the account as a whole, reviews it with leadership, presents it to the client in a strategy session and puts the changes in motion. Client Success then follows up on the progress and results.</p>
+        <div class="pillrow">
+          <span class="pill">Weeks 3, 6 and 9</span>
+          <span class="pill">About 15 minutes each</span>
+          <span class="pill">Every account, every time</span>
+        </div>
+      </div>
+
+      <div class="grid g3">
+        <div class="card">
+          <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg></div>
+          <h4>Proactive retains</h4>
+          <p class="muted">Clients who hear about a fix from us stay. Clients who have to ask for one start evaluating alternatives.</p>
+        </div>
+        <div class="card">
+          <div class="icon blue"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="7" r="4"/><path d="M3 21v-2a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v2"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/><path d="M21 21v-2a4 4 0 0 0-3-3.85"/></svg></div>
+          <h4>Clear ownership</h4>
+          <p class="muted">Strategy sits with the Account Manager. The client experience sits with Client Success. Each team does its best work in its own lane.</p>
+        </div>
+        <div class="card">
+          <div class="icon dark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg></div>
+          <h4>Growth starts at week 3</h4>
+          <p class="muted">Renewals and expansions are earned early. A sharp week 3 is what makes the week 10 conversation easy.</p>
+        </div>
+      </div>
+
+      <div class="section">
+        <h3>What you'll walk away with</h3>
+        <ul class="clean">
+          <li>Who owns what between Account Management and Client Success</li>
+          <li>The four assessment areas: rep performance, data and KPIs, ICP and strategy, and what's working</li>
+          <li>The focus for week 3, week 6 and week 9</li>
+          <li>The rep reset process and when to escalate</li>
+          <li>A builder that turns your notes into a paste-ready assessment</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- 2 ROLES -->
+    <section class="view" id="v-roles" data-title="Who owns what">
+      <p class="overline">Module 2</p>
+      <h1>Who owns what</h1>
+      <p class="lead">The Account Manager owns the strategy and everything the client asks for that changes how the campaign runs. Client Success stays fully informed so every check-in can speak to progress and results.</p>
+
+      <div class="grid g2" style="margin-top:24px">
+        <div class="card">
+          <div class="lane-head"><span class="badge am">Account Manager</span></div>
+          <h3>Owns the strategy</h3>
+          <ul class="clean">
+            <li>Results against the contract, and the diagnosis when they're off</li>
+            <li>Capturing every client request and piece of feedback on weekly calls</li>
+            <li>ICP, targeting, lists, titles and markets, with the GTM team</li>
+            <li>Messaging and talk tracks</li>
+            <li>Rep performance, coaching and the rep reset process</li>
+            <li>The proof and expansion opportunities that earn a renewal</li>
+          </ul>
+        </div>
+        <div class="card">
+          <div class="lane-head"><span class="badge cs">VP, Client Success</span></div>
+          <h3>Owns the client experience</h3>
+          <ul class="clean">
+            <li>Client satisfaction, sentiment and feedback</li>
+            <li>Keeping expectations aligned with what we deliver</li>
+            <li>Resetting expectations when scope, hours or territory don't match</li>
+            <li>Check-ins at weeks 4, 8 and 10 that speak to progress and success</li>
+            <li>The renewal and expansion conversation</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="section">
+        <h3>Shared moments, clear ownership</h3>
+        <table>
+          <thead><tr><th>Situation</th><th>Account Manager</th><th>Client Success</th></tr></thead>
+          <tbody>
+            <tr><td>Results are behind contract</td><td>Diagnoses it, builds the plan, presents it to the client</td><td>Knows the plan and checks the client's confidence in it</td></tr>
+            <tr><td>Client asks for a targeting or strategy change</td><td>Captures it, owns it with GTM, includes it in the assessment</td><td>Stays informed so the check-in can speak to how it's performing</td></tr>
+            <tr><td>A rep isn't performing</td><td>Starts the rep reset process at week 3</td><td>Aware of the plan, so nothing is a surprise</td></tr>
+            <tr><td>Expectations don't match scope</td><td>Spots the gap and flags it in the assessment</td><td>Resets the expectation with the client</td></tr>
+            <tr><td>Renewal is approaching</td><td>Builds the proof and identifies expansion opportunities</td><td>Leads the renewal and expansion conversation</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="callout">
+        <div class="tag">If strategy comes up on a Client Success check-in</div>
+        <p>Client Success keeps the conversation on progress and experience, and points the client back to their Account Manager's strategy session. The Account Manager follows up within 2 business days.</p>
+      </div>
+    </section>
+
+    <!-- 3 RHYTHM -->
+    <section class="view" id="v-rhythm" data-title="The rhythm">
+      <p class="overline">Module 3</p>
+      <h1>The rhythm</h1>
+      <p class="lead">Every checkpoint runs the same five steps. Leadership reviews the assessment before the client sees it, the client hears it from the Account Manager in a strategy session, and Client Success follows up on how the changes are landing.</p>
+
+      <div class="steps" style="margin-top:24px">
+        <div class="step"><div class="n">Step 1</div><h4>Assess</h4><p class="muted">End of week 3, 6 and 9. Step back and look at the account as a whole.</p><div class="who"><span class="badge am">Account Manager</span></div></div>
+        <div class="step"><div class="n">Step 2</div><h4>Review</h4><p class="muted">Send it the day before your weekly 1-1. Review it together before the client sees it.</p><div class="who"><span class="badge dk">1-1 review</span></div></div>
+        <div class="step"><div class="n">Step 3</div><h4>Present</h4><p class="muted">Walk the client through it in a strategy session on your weekly call.</p><div class="who"><span class="badge am">Account Manager</span></div></div>
+        <div class="step"><div class="n">Step 4</div><h4>Act</h4><p class="muted">Start pivots and any rep resets right away.</p><div class="who"><span class="badge am">Account Manager</span></div></div>
+        <div class="step cs"><div class="n">Step 5</div><h4>Follow through</h4><p class="muted">Check-in speaks to the assessment, the progress and the results.</p><div class="who"><span class="badge cs">Client Success</span></div></div>
+      </div>
+
+      <div class="timeline">
+        <svg viewBox="0 0 760 204" role="img" aria-label="Each Account Manager assessment lands before the Client Success check-in">
+          <defs><marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#9a9a9a"/></marker></defs>
+          <text x="24" y="42" font-size="13" font-weight="700" fill="#181818">Account</text>
+          <text x="24" y="58" font-size="13" font-weight="700" fill="#181818">Manager</text>
+          <text x="24" y="104" font-size="11" fill="#6b6b6b">Week</text>
+          <text x="24" y="160" font-size="13" font-weight="700" fill="#181818">Client</text>
+          <text x="24" y="176" font-size="13" font-weight="700" fill="#181818">Success</text>
+          <line x1="130" x2="690" y1="108" y2="108" stroke="#dedede" stroke-width="1.25"/>
+          <g font-size="11.5" fill="#6b6b6b" text-anchor="middle" id="ticks"></g>
+          <g fill="none" stroke="#9a9a9a" stroke-width="1.25" id="arrows"></g>
+          <g id="am"></g><g id="cs"></g>
+        </svg>
+      </div>
+
+      <div class="section">
+        <h3>The assessment-week call is a strategy session</h3>
+        <p class="muted" style="max-width:760px">Recommended format. The Account Manager runs the call as a strategy session, not a lead review. There will be outliers where a rep needs to stay on, and that's fine.</p>
+        <div class="grid g3">
+          <div class="card"><div class="n" style="font-size:12px;font-weight:700;letter-spacing:.12em;color:var(--ink-500);text-transform:uppercase;margin-bottom:8px">Before the call</div><h4>Reps send full recaps</h4><p class="muted">Each rep sends a complete recap of their leads and activity that week.</p></div>
+          <div class="card"><div class="n" style="font-size:12px;font-weight:700;letter-spacing:.12em;color:var(--ink-500);text-transform:uppercase;margin-bottom:8px">First 10 minutes</div><h4>Reps cover their leads</h4><p class="muted">Reps join, walk through their leads and answer questions, then drop off.</p></div>
+          <div class="card"><div class="n" style="font-size:12px;font-weight:700;letter-spacing:.12em;color:var(--ink-500);text-transform:uppercase;margin-bottom:8px">Remaining 35 minutes</div><h4>Account Manager leads strategy</h4><p class="muted">Assessment, pivots, ICP and expansion. Extend the call to 45 minutes to give it proper time.</p></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 4 FRAMEWORK -->
+    <section class="view" id="v-framework" data-title="The assessment">
+      <p class="overline">Module 4</p>
+      <h1>The assessment: four areas, every time</h1>
+      <p class="lead">Start with an overall status, assess the same four areas, and close with the plan. The structure never changes, so leadership and Client Success always know where to look and you never start from a blank page.</p>
+
+      <div class="card" style="margin-top:24px;display:flex;gap:16px;align-items:center;flex-wrap:wrap">
+        <h4 style="margin:0">Overall status</h4>
+        <span class="badge g">Green</span><span class="badge y">Yellow</span><span class="badge r">Red</span>
+        <span class="muted">plus one sentence on why</span>
+      </div>
+
+      <div class="grid g2" style="margin-top:16px">
+        <div class="card"><div class="icon"><b>1</b></div><h3>Rep performance</h3><p>Assess every rep on the account individually.</p>
+          <ul class="clean"><li>Activity and quality against expectations</li><li>Communicating with the client directly</li><li>Doing the meeting handoff and intro</li><li>Following up to confirm meetings</li><li>Your call: keep, reset or replace</li></ul></div>
+        <div class="card"><div class="icon blue"><b>2</b></div><h3>Data and KPIs</h3><p>The actual numbers, and what they're telling you.</p>
+          <ul class="clean"><li>Are people picking up? Connect rate</li><li>Connect to conversation to meeting conversion</li><li>Which titles and industries are responding</li><li>MQLs, SQLs, meetings booked and held</li><li>Our KPIs vs. the contract and the client's expectations</li></ul></div>
+        <div class="card"><div class="icon dark"><b>3</b></div><h3>ICP and strategy</h3><p>Should we pivot, and why?</p>
+          <ul class="clean"><li>Is the ICP right, or is the data pointing elsewhere?</li><li>Other industries the client should explore</li><li>Services in their offering that aren't in the Business Profile</li><li>Anything that could lift results or open an expansion</li></ul></div>
+        <div class="card"><div class="icon"><b>4</b></div><h3>What's working, what's not</h3><p>The honest read, in a few lines.</p>
+          <ul class="clean"><li>What to double down on</li><li>What to stop or change</li><li>Then the plan: one or two changes, each with a date</li><li>And what Client Success needs going in: client mood, expectation gaps</li></ul></div>
+      </div>
+
+      <div class="callout green">
+        <div class="tag">Count what's real</div>
+        <p>A meeting that no-showed or an SQL that never booked is not a result. Report what would hold up if the client audited it.</p>
+      </div>
+
+      <div class="section">
+        <h3>How to gather it <span class="muted" style="font-weight:500;font-size:14px">(recommended, use what works for you)</span></h3>
+        <div class="grid g4">
+          <div class="card"><h4>ClientSide</h4><p class="muted">Numbers, connect rates and pace for the date range.</p></div>
+          <div class="card"><h4>Call recordings</h4><p class="muted">Listen to recent connected conversations. Which titles and industries are engaging?</p></div>
+          <div class="card"><h4>Last 3 weeks of Fireflies</h4><p class="muted">Client calls. What has the client asked for, and was it delivered?</p></div>
+          <div class="card"><h4>Internal and client chats</h4><p class="muted">Are reps communicating with the client, doing handoffs and confirming meetings?</p></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 5 CHECKPOINTS -->
+    <section class="view" id="v-checkpoints" data-title="The checkpoints">
+      <p class="overline">Module 5</p>
+      <h1>The checkpoints</h1>
+      <p class="lead">Same four areas, different focus. Each checkpoint has one question to answer and one decision to make.</p>
+
+      <div class="tabs" id="cpTabs">
+        <button class="tab on" data-p="w3">Week 3: Foundation</button>
+        <button class="tab" data-p="w6">Week 6: Course correct</button>
+        <button class="tab" data-p="w9">Week 9: Renewal and expansion</button>
+      </div>
+
+      <div class="panel on" id="p-w3">
+        <div class="qhead"><div class="big">Is the foundation right?</div><div class="meta">Feeds<b>Week 4 Client Success check-in</b></div></div>
+        <div class="grid g3">
+          <div class="card"><h4>Look at</h4><ul class="clean"><li>List quality and title fit</li><li>Messaging and opener</li><li>Each rep's performance and client communication</li><li>Client responsiveness and approvals</li></ul></div>
+          <div class="card"><h4>Decide</h4><p>What needs to change now. If a rep isn't performing, week 3 is where the rep reset process starts.</p></div>
+          <div class="card"><h4>Client Success uses it to</h4><p>Confirm the client feels heard and that expectations match what we can deliver.</p></div>
+        </div>
+
+        <div class="section">
+          <h3>The rep reset process</h3>
+          <p class="muted">Starts at week 3 for any rep who isn't meeting expectations. Everyone knows where they stand. Nothing is a surprise.</p>
+          <div class="steps s4">
+            <div class="step"><div class="n">Step 1</div><h4>Call with the rep</h4><p class="muted">Talk through what you're seeing in the data and on the calls.</p></div>
+            <div class="step"><div class="n">Step 2</div><h4>Reset expectations</h4><p class="muted">Be specific: activity, quality, client communication.</p></div>
+            <div class="step"><div class="n">Step 3</div><h4>Follow-up email</h4><p class="muted">Put the expectations in writing with a date 7 days out. CC the Head of Operations and Delivery.</p></div>
+            <div class="step"><div class="n">Step 4</div><h4>Review on the date</h4><p class="muted">Check the results against what was agreed.</p></div>
+          </div>
+          <div class="esc" style="margin-top:12px">
+            <div class="card g"><span class="badge g">Met</span><p class="muted" style="margin-top:10px">The rep stays. Check in again in 2 weeks.</p></div>
+            <div class="card y"><span class="badge y">Partially met</span><p class="muted" style="margin-top:10px">Case by case, decided with the Head of Operations and Delivery.</p></div>
+            <div class="card r"><span class="badge r">Not met</span><p class="muted" style="margin-top:10px">Replace the rep.</p></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel" id="p-w6">
+        <div class="qhead"><div class="big">Are the changes working, and are we on pace?</div><div class="meta">Feeds<b>Week 8 Client Success check-in</b></div></div>
+        <div class="grid g3">
+          <div class="card"><h4>Look at</h4><ul class="clean"><li>Impact of the week 3 changes</li><li>Pace against the contract</li><li>Outcome of any rep resets</li><li>New ICP or industry signals in the data</li></ul></div>
+          <div class="card"><h4>Decide</h4><p>If behind, a recovery plan with week-by-week steps and a clear target. Any open rep reset should be resolved by now.</p></div>
+          <div class="card"><h4>Client Success uses it to</h4><p>Speak to the plan the Account Manager already shared and how it's performing.</p></div>
+        </div>
+      </div>
+
+      <div class="panel" id="p-w9">
+        <div class="qhead"><div class="big">Will this client renew or expand, and what's the proof?</div><div class="meta">Feeds<b>Week 10 Client Success check-in</b></div></div>
+        <div class="grid g3">
+          <div class="card"><h4>Look at</h4><ul class="clean"><li>Meetings held and pipeline created</li><li>Client feedback on lead quality</li><li>Where the next term could grow</li></ul></div>
+          <div class="card"><h4>Decide</h4><p>Likely to renew, at risk, or ending. Pull the two or three strongest proof points and name the expansion opportunity.</p></div>
+          <div class="card"><h4>Client Success uses it to</h4><p>Lead the renewal and expansion conversation, backed by real results.</p></div>
+        </div>
+        <div class="section">
+          <h3>Expansion opportunities to flag</h3>
+          <div class="grid g4">
+            <div class="card"><h4>Add reps</h4><p class="muted">Results support more coverage.</p></div>
+            <div class="card"><h4>Right-size the team</h4><p class="muted">Fewer reps, better fit for the budget or market.</p></div>
+            <div class="card"><h4>New territory</h4><p class="muted">A new region, industry or segment the data supports.</p></div>
+            <div class="card"><h4>T2</h4><p class="muted">The account is ready for the next tier of service.</p></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 6 ESCALATION -->
+    <section class="view" id="v-escalation" data-title="Handoff and escalation">
+      <p class="overline">Module 6</p>
+      <h1>Handoff and escalation</h1>
+      <p class="lead">Your status sets the response. The earlier we know, the more options we have.</p>
+
+      <div class="esc" style="margin-top:24px">
+        <div class="card g"><span class="badge g">Green</span><h4 style="margin-top:12px">On track</h4><p class="muted">Review in your 1-1, present to the client, keep executing.</p></div>
+        <div class="card y"><span class="badge y">Yellow</span><h4 style="margin-top:12px">Off pace, fixable</h4><p class="muted">Present the plan with dates. Yellow two checkpoints in a row gets a deeper review in your 1-1.</p></div>
+        <div class="card r"><span class="badge r">Red</span><h4 style="margin-top:12px">At risk</h4><p class="muted">Don't wait for the checkpoint. Flag the Head of Operations and Delivery the same day.</p></div>
+      </div>
+
+      <div class="section">
+        <h3>The handoff</h3>
+        <table>
+          <tbody>
+            <tr><td>When</td><td>End of week 3, 6 and 9 from campaign start. Reminders are set for every account at launch.</td></tr>
+            <tr><td>Send it</td><td>Email the assessment to Client Success and CC the Head of Operations and Delivery, the day before your weekly 1-1.</td></tr>
+            <tr><td>Review it</td><td>Walk through it in your 1-1 before the client sees it.</td></tr>
+            <tr><td>Present it</td><td>Strategy session on your weekly client call. The Client Success check-in follows up on it, so the client never hears it there first.</td></tr>
+            <tr><td>Rep resets</td><td>Run the rep reset process and CC the Head of Operations and Delivery on the follow-up email.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- 7 BUILDER -->
+    <section class="view" id="v-builder" data-title="Build your assessment">
+      <p class="overline">Module 7</p>
+      <h1>Build your assessment</h1>
+      <p class="lead">Fill it in, copy it, send it. Your draft stays in this browser until you clear it.</p>
+
+      <div class="builder" style="margin-top:20px">
+        <form class="form" id="bform" autocomplete="off">
+          <fieldset>
+            <legend>Account</legend>
+            <div class="row r2">
+              <div><label for="f-client">Client</label><input type="text" id="f-client" placeholder="Client name"></div>
+              <div><label for="f-am">Account Manager</label><input type="text" id="f-am" placeholder="Your name"></div>
+            </div>
+            <div class="row r2">
+              <div><label for="f-week">Checkpoint</label><select id="f-week"><option value="3">Week 3: Foundation</option><option value="6">Week 6: Course correct</option><option value="9">Week 9: Renewal and expansion</option></select></div>
+              <div><label for="f-date">Client Success check-in</label><input type="date" id="f-date"></div>
+            </div>
+            <div class="prompt" id="f-prompt" style="margin-top:14px"></div>
+          </fieldset>
+
+          <fieldset>
+            <legend>Overall status</legend>
+            <div class="seg">
+              <label><input type="radio" name="status" value="Green"> Green</label>
+              <label><input type="radio" name="status" value="Yellow"> Yellow</label>
+              <label><input type="radio" name="status" value="Red"> Red</label>
+            </div>
+            <label for="f-why">Why, in one sentence</label>
+            <input type="text" id="f-why" placeholder="e.g. Activity on target, connects low due to HQ-heavy list">
+          </fieldset>
+
+          <fieldset>
+            <legend>1. Rep performance</legend>
+            <div class="row r2">
+              <div><label for="r1-name">Rep 1</label><input type="text" id="r1-name" placeholder="Name"></div>
+              <div><label for="r1-call">Your call</label><select id="r1-call"><option value="">Select</option><option>Keep</option><option>Reset (7 days)</option><option>Replace</option></select></div>
+            </div>
+            <input type="text" id="r1-perf" placeholder="Activity and quality" style="margin-top:8px">
+            <input type="text" id="r1-comm" placeholder="Client communication, handoffs, confirmations" style="margin-top:8px">
+            <div class="row r2" style="margin-top:6px">
+              <div><label for="r2-name">Rep 2</label><input type="text" id="r2-name" placeholder="Name"></div>
+              <div><label for="r2-call">Your call</label><select id="r2-call"><option value="">Select</option><option>Keep</option><option>Reset (7 days)</option><option>Replace</option></select></div>
+            </div>
+            <input type="text" id="r2-perf" placeholder="Activity and quality" style="margin-top:8px">
+            <input type="text" id="r2-comm" placeholder="Client communication, handoffs, confirmations" style="margin-top:8px">
+          </fieldset>
+
+          <fieldset>
+            <legend>2. Data and KPIs</legend>
+            <div class="row r3">
+              <div><label for="n-dials">Dials</label><input type="number" min="0" id="n-dials"></div>
+              <div><label for="n-conn">Connect rate %</label><input type="number" min="0" id="n-conn"></div>
+              <div><label for="n-dm">Conversations</label><input type="number" min="0" id="n-dm"></div>
+              <div><label for="n-booked">Meetings booked</label><input type="number" min="0" id="n-booked"></div>
+              <div><label for="n-held">Meetings held</label><input type="number" min="0" id="n-held"></div>
+              <div><label for="n-mql">MQLs</label><input type="number" min="0" id="n-mql"></div>
+              <div><label for="n-sql">SQLs</label><input type="number" min="0" id="n-sql"></div>
+              <div><label for="f-goal">Contract goal</label><input type="text" id="f-goal" placeholder="e.g. 6 SQLs"></div>
+              <div><label for="f-pace">Pace</label><select id="f-pace"><option value="">Select</option><option>On pace</option><option>Behind</option><option>Ahead</option></select></div>
+            </div>
+            <label for="f-titles">Titles responding</label><input type="text" id="f-titles">
+            <label for="f-inds">Industries responding</label><input type="text" id="f-inds">
+          </fieldset>
+
+          <fieldset>
+            <legend>3. ICP and strategy</legend>
+            <div class="row r2">
+              <div><label for="f-pivot">Pivot?</label><select id="f-pivot"><option value="">Select</option><option>No</option><option>Yes</option></select></div>
+              <div><label for="f-pivotwhy">Why</label><input type="text" id="f-pivotwhy"></div>
+            </div>
+            <label for="f-newinds">Other industries to explore</label><input type="text" id="f-newinds">
+            <label for="f-services">Services not in the Business Profile</label><input type="text" id="f-services">
+            <div class="row r2">
+              <div><label for="f-exp">Expansion opportunity</label><select id="f-exp"><option value="">Select</option><option>None yet</option><option>Add reps</option><option>Right-size the team</option><option>New territory</option><option>T2</option></select></div>
+              <div><label for="f-expnote">Note</label><input type="text" id="f-expnote"></div>
+            </div>
+          </fieldset>
+
+          <fieldset>
+            <legend>4. What's working, what's not</legend>
+            <label for="f-work">Working</label><input type="text" id="f-work">
+            <label for="f-notwork">Not working</label><input type="text" id="f-notwork">
+          </fieldset>
+
+          <fieldset>
+            <legend>The plan</legend>
+            <div class="row r2">
+              <div><label for="c1">Change 1</label><input type="text" id="c1"></div>
+              <div><label for="c1d">By</label><input type="date" id="c1d"></div>
+              <div><label for="c2">Change 2</label><input type="text" id="c2"></div>
+              <div><label for="c2d">By</label><input type="date" id="c2d"></div>
+            </div>
+          </fieldset>
+
+          <fieldset>
+            <legend>For Client Success</legend>
+            <label for="h-mood">Client mood</label><input type="text" id="h-mood">
+            <label for="h-gaps">Expectation gaps to reset</label><input type="text" id="h-gaps">
+            <label for="h-note">Anything to reinforce or avoid</label><input type="text" id="h-note">
+          </fieldset>
+        </form>
+
+        <div class="preview">
+          <div class="top"><span>Paste-ready</span><button class="btn light" type="button" id="clearBtn" style="padding:6px 12px;font-size:12px">Clear</button></div>
+          <pre id="out"></pre>
+          <div class="btnrow"><button class="btn primary" type="button" id="copyBtn">Copy assessment</button></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 8 CHECK -->
+    <section class="view" id="v-check" data-title="Knowledge check">
+      <p class="overline">Module 8</p>
+      <h1>Knowledge check</h1>
+      <p class="lead">Four quick scenarios. Pick the best response.</p>
+      <div id="quiz" style="margin-top:20px"></div>
+      <p class="score" id="qscore"></p>
+    </section>
+
+    <div class="footer-nav">
+      <button class="btn ghost" id="prevBtn">Back</button>
+      <button class="btn primary" id="nextBtn">Next</button>
+    </div>
+  </main>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+(function(){
+  var store = {
+    get:function(k){try{return JSON.parse(localStorage.getItem(k))}catch(e){return null}},
+    set:function(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}
+  };
+  var views = Array.prototype.slice.call(document.querySelectorAll('.view'));
+  var ids = views.map(function(v){return v.id.replace('v-','')});
+  var done = store.get('am-assess-done') || {};
+  var nav = document.getElementById('nav');
+  views.forEach(function(v,i){
+    var li=document.createElement('li');
+    var a=document.createElement('a');
+    a.href='#'+ids[i];
+    a.setAttribute('role','button');
+    a.addEventListener('click',function(e){e.preventDefault();go(ids[i])});
+    a.innerHTML='<span class="num">'+(i+1)+'</span><span>'+v.getAttribute('data-title')+'</span>';
+    li.appendChild(a); nav.appendChild(li);
+  });
+  var links = nav.querySelectorAll('a');
+  function toast(t){var el=document.getElementById('toast');el.textContent=t;el.classList.add('on');setTimeout(function(){el.classList.remove('on')},1800)}
+  function paint(){
+    var n=0;
+    links.forEach(function(a,i){ if(done[ids[i]]){a.classList.add('done');n++} });
+    var p=Math.round(n/ids.length*100);
+    document.getElementById('pct').textContent=p+'%';
+    document.getElementById('bar').style.width=p+'%';
+  }
+  var cur=0;
+  function show(id){
+    var i=ids.indexOf(id); if(i<0)i=0; cur=i;
+    views.forEach(function(v,j){v.classList.toggle('on',j===i)});
+    links.forEach(function(a,j){a.classList.toggle('active',j===i)});
+    done[ids[i]]=true; store.set('am-assess-done',done); paint();
+    document.getElementById('prevBtn').style.visibility=i===0?'hidden':'visible';
+    document.getElementById('nextBtn').textContent=i===ids.length-1?'Finish':'Next';
+    window.scrollTo(0,0);
+  }
+  function go(id){show(id);try{if(location.hash!=='#'+id)history.replaceState(null,'','#'+id)}catch(e){}}
+  function route(){show((location.hash||'').replace('#','')||ids[0])}
+  window.addEventListener('hashchange',route);
+  document.getElementById('prevBtn').onclick=function(){if(cur>0)go(ids[cur-1])};
+  document.getElementById('nextBtn').onclick=function(){
+    if(cur<ids.length-1){go(ids[cur+1])} else {toast('Module complete. Nice work.')}
+  };
+
+  // timeline
+  var X=function(w){return 130+w*56};
+  var ticks=document.getElementById('ticks'), s='';
+  for(var w=0;w<=10;w++){s+='<line x1="'+X(w)+'" x2="'+X(w)+'" y1="104" y2="112" stroke="#b9b9b9"/><text x="'+X(w)+'" y="98">'+w+'</text>'}
+  ticks.innerHTML=s;
+  var ar='';[[3,4],[6,8],[9,10]].forEach(function(p){ar+='<path d="M'+X(p[0])+' 68 L'+X(p[1])+' 138" marker-end="url(#ar)"/>'});
+  document.getElementById('arrows').innerHTML=ar;
+  function box(w,y,t1,t2,am){
+    var x=X(w)-52;
+    return '<rect x="'+x+'" y="'+y+'" width="104" height="44" rx="8" fill="'+(am?'#f2f8e6':'#eaf5fc')+'" stroke="'+(am?'#80b122':'#2d9cdb')+'" stroke-width="1.5"/>'+
+      '<text x="'+X(w)+'" y="'+(y+19)+'" text-anchor="middle" font-size="13" font-weight="700" fill="#181818">'+t1+'</text>'+
+      '<text x="'+X(w)+'" y="'+(y+35)+'" text-anchor="middle" font-size="11.5" fill="#3a3a3a">'+t2+'</text>';
+  }
+  document.getElementById('am').innerHTML=box(3,24,'Week 3','Foundation',1)+box(6,24,'Week 6','Course correct',1)+box(9,24,'Week 9','Renewal',1);
+  document.getElementById('cs').innerHTML=box(4,140,'Week 4','Check-in',0)+box(8,140,'Week 8','Check-in',0)+box(10,140,'Week 10','Check-in',0);
+
+  // checkpoint tabs
+  document.querySelectorAll('#cpTabs .tab').forEach(function(t){
+    t.onclick=function(){
+      document.querySelectorAll('#cpTabs .tab').forEach(function(x){x.classList.toggle('on',x===t)});
+      document.querySelectorAll('#v-checkpoints .panel').forEach(function(p){p.classList.toggle('on',p.id==='p-'+t.getAttribute('data-p'))});
+    };
+  });
+
+  // builder
+  var prompts={
+    '3':'Week 3 focus: Is the foundation right? List, messaging, rep performance, client responsiveness. Start a rep reset now for anyone not meeting expectations.',
+    '6':'Week 6 focus: Are the week 3 changes working, and are we on pace? If behind, lay out a week-by-week recovery plan.',
+    '9':'Week 9 focus: Will this client renew or expand? Lead with your strongest proof points and name the expansion opportunity.'
+  };
+  var labels={'3':'Foundation','6':'Course correct','9':'Renewal and expansion'};
+  var form=document.getElementById('bform');
+  var fields=form.querySelectorAll('input,select,textarea');
+  function val(id){var e=document.getElementById(id);return e?e.value.trim():''}
+  function fmtDate(d){if(!d)return'';var p=d.split('-');var m=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];return m[Number(p[1])-1]+' '+Number(p[2])}
+  function blank(v){return v||'__'}
+  function build(){
+    var wk=val('f-week');
+    document.getElementById('f-prompt').textContent=prompts[wk];
+    var st=form.querySelector('input[name=status]:checked');
+    var lines=[];
+    function rep(n){var nm=val('r'+n+'-name'),c=val('r'+n+'-call');if(!nm&&!c)return;lines.push((nm||'Rep '+n)+': '+(c||''));if(val('r'+n+'-perf'))lines.push('  Activity and quality: '+val('r'+n+'-perf'));if(val('r'+n+'-comm'))lines.push('  Client communication: '+val('r'+n+'-comm'))}
+    lines.push((val('f-client')||'[Client]')+' | Week '+wk+' Assessment: '+labels[wk]);
+    lines.push('Account Manager: '+(val('f-am')||'[name]')+(val('f-date')?' | Client Success check-in: '+fmtDate(val('f-date')):''));
+    lines.push('');
+    lines.push('OVERALL STATUS: '+(st?st.value:'[Green / Yellow / Red]'));
+    lines.push('Why: '+val('f-why'));
+    lines.push('');
+    lines.push('1. REP PERFORMANCE');
+    var before=lines.length;rep(1);rep(2);if(lines.length===before)lines.push('Rep: ');
+    lines.push('');
+    lines.push('2. DATA AND KPIs');
+    lines.push('Dials: '+blank(val('n-dials'))+' | Connect rate: '+(val('n-conn')?val('n-conn')+'%':'__')+' | Conversations: '+blank(val('n-dm')));
+    lines.push('Meetings booked: '+blank(val('n-booked'))+' | Held: '+blank(val('n-held'))+' | MQLs: '+blank(val('n-mql'))+' | SQLs: '+blank(val('n-sql')));
+    lines.push('Contract goal: '+val('f-goal')+' | Pace: '+val('f-pace'));
+    lines.push('Titles responding: '+val('f-titles'));
+    lines.push('Industries responding: '+val('f-inds'));
+    lines.push('');
+    lines.push('3. ICP AND STRATEGY');
+    lines.push('Pivot: '+val('f-pivot')+(val('f-pivotwhy')?' | Why: '+val('f-pivotwhy'):''));
+    lines.push('Other industries to explore: '+val('f-newinds'));
+    lines.push('Services not in the Business Profile: '+val('f-services'));
+    lines.push('Expansion opportunity: '+val('f-exp')+(val('f-expnote')?' | '+val('f-expnote'):''));
+    lines.push('');
+    lines.push("4. WHAT'S WORKING, WHAT'S NOT");
+    lines.push('Working: '+val('f-work'));
+    lines.push('Not working: '+val('f-notwork'));
+    lines.push('');
+    lines.push('THE PLAN');
+    if(val('c1'))lines.push('Change 1: '+val('c1')+(val('c1d')?' | by '+fmtDate(val('c1d')):''));
+    if(val('c2'))lines.push('Change 2: '+val('c2')+(val('c2d')?' | by '+fmtDate(val('c2d')):''));
+    if(!val('c1')&&!val('c2'))lines.push('Change 1: ');
+    lines.push('');
+    lines.push('FOR CLIENT SUCCESS');
+    lines.push('Client mood: '+val('h-mood'));
+    lines.push('Expectation gaps to reset: '+val('h-gaps'));
+    lines.push('Reinforce or avoid: '+val('h-note'));
+    document.getElementById('out').textContent=lines.join('\n');
+    var draft={};fields.forEach(function(f){if(f.type==='radio'){if(f.checked)draft.status=f.value}else draft[f.id]=f.value});
+    store.set('am-assess-draft',draft);
+  }
+  var draft=store.get('am-assess-draft');
+  if(draft){fields.forEach(function(f){if(f.type==='radio'){f.checked=draft.status===f.value}else if(draft[f.id]!=null)f.value=draft[f.id]})}
+  form.addEventListener('input',build);form.addEventListener('change',build);
+  form.addEventListener('submit',function(e){e.preventDefault()});
+  document.getElementById('clearBtn').onclick=function(){form.reset();store.set('am-assess-draft',null);build();toast('Draft cleared')};
+  document.getElementById('copyBtn').onclick=function(){
+    var t=document.getElementById('out').textContent;
+    try{navigator.clipboard.writeText(t).then(function(){toast('Copied. Paste it wherever it goes.')},function(){sel()})}catch(e){sel()}
+    function sel(){var r=document.createRange();r.selectNodeContents(document.getElementById('out'));var s=window.getSelection();s.removeAllRanges();s.addRange(r);toast('Selected. Press Ctrl or Cmd + C.')}
+  };
+  build();
+
+  // quiz
+  var Q=[
+    {q:'Week 3. A rep has the longest runway on the account and nothing real to show. What do you do?',o:['Give them until week 6 to turn it around','Start the rep reset: call, reset expectations, follow-up email with a date 7 days out','Replace them today without a conversation'],a:1,f:'Week 3 starts the reset. Met means they stay, partial is case by case, not met means replace. Nothing is a surprise.'},
+    {q:'On your weekly call, the client asks to change target titles. Who owns it?',o:['Client Success, at the next check-in','You. Capture it, own it with GTM and include it in your assessment so Client Success can speak to how it performs','The reps on the account'],a:1,f:'Client requests that change the campaign belong to the Account Manager. Client Success stays informed.'},
+    {q:'Week 6. You are behind pace but have a clear fix. What status and next step?',o:['Green, results will catch up','Yellow, present a dated recovery plan to the client','Red, escalate immediately'],a:1,f:'Off pace but fixable is Yellow. Lead with the plan and the dates.'},
+    {q:'When and where does the assessment go?',o:['To the client first, then leadership','Email to Client Success, CC the Head of Operations and Delivery, the day before your weekly 1-1','Only to Client Success after their check-in'],a:1,f:'It is reviewed in your 1-1 before the client sees it, then presented in your strategy session.'}
+  ];
+  var qwrap=document.getElementById('quiz'),score=0,answered=0;
+  Q.forEach(function(item,qi){
+    var d=document.createElement('div');d.className='q';
+    d.innerHTML='<h4>'+(qi+1)+'. '+item.q+'</h4><div class="opts"></div><div class="fb"></div>';
+    var opts=d.querySelector('.opts'),fb=d.querySelector('.fb');
+    item.o.forEach(function(o,oi){
+      var b=document.createElement('button');b.type='button';b.className='opt';b.textContent=o;
+      b.onclick=function(){
+        if(d.getAttribute('data-done'))return;d.setAttribute('data-done','1');answered++;
+        if(oi===item.a){b.classList.add('right');score++;fb.innerHTML='<b>Correct.</b> '+item.f}
+        else{b.classList.add('wrong');opts.children[item.a].classList.add('right');fb.innerHTML='<b>Not quite.</b> '+item.f}
+        fb.classList.add('on');
+        if(answered===Q.length){document.getElementById('qscore').textContent='You scored '+score+' of '+Q.length+'.'}
+      };
+      opts.appendChild(b);
+    });
+    qwrap.appendChild(d);
+  });
+
+  paint(); route();
+})();
+</script>
+</body>
+</html>
